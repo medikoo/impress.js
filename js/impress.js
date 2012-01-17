@@ -12,6 +12,10 @@
 (function ( document, window ) {
 
     // HELPER FUNCTIONS
+
+    var forEach = Array.prototype.forEach,
+        slice = Array.prototype.slice,
+        isArray = Array.isArray;
     
     var pfx = (function () {
 
@@ -256,6 +260,112 @@
     
     // EVENTS
     
+    var setSubSteps = function (el) {
+        var steps = el.querySelectorAll(".substep"),
+        order = [], unordered = [];
+        forEach.call(steps, function (el) {
+            var index = Number(el.dataset.order);
+            if (!isNaN(index)) {
+                if (!order[index]) {
+                    order[index] = el;
+                } else if (Array.isArray(order[index])) {
+                    order[index].push(el);
+                } else {
+                    order[index] = [order[index], el];
+                }
+            } else {
+                unordered.push(el);
+            }
+        });
+        el.subSteps = order.filter(Boolean).concat(unordered);
+    };
+
+    var setPrevious = function (data) {
+        if (isArray(data)) {
+            data.forEach(setPrevious);
+            return;
+        }
+        data.classList.remove('active');
+        data.classList.add('previous');
+    };
+
+    var setActive = function (data) {
+        if (isArray(data)) {
+            data.forEach(setActive);
+            return;
+        }
+        data.classList.remove('previous');
+        data.classList.add('active');
+    };
+
+    var clearSub = function (data) {
+        if (isArray(data)) {
+            data.forEach(clearSub);
+            return;
+        }
+        data.classList.remove('active');
+        data.classList.remove('previous');
+    };
+
+    var nextStep = function () {
+        var subactive, next, subSteps;
+        if (!active.subSteps) {
+            setSubSteps(active);
+        }
+        subSteps = active.subSteps;
+        if (subSteps.length && ((subactive = subSteps.active) !==
+            (subSteps.length - 1))) {
+            if (subactive != null) {
+                setPrevious(subSteps[subactive]);
+            } else {
+                subactive = -1;
+            }
+            setActive(subSteps[++subactive]);
+            subSteps.active = subactive;
+            return;
+        }
+        next = steps.indexOf( active ) + 1;
+        next = next < steps.length ? steps[ next ] : steps[ 0 ];
+        if (!next.subSteps) {
+            setSubSteps(next);
+        }
+        if (next.subSteps.active != null) {
+            forEach.call(next.subSteps, clearSub);
+            next.subSteps.active = null;
+        }
+        select(next);
+    };
+
+    var previousStep = function () {
+        var subactive, next, subSteps;
+        if (!active.subSteps) {
+            setSubSteps(active);
+        }
+        subSteps = active.subSteps;
+        if (subSteps.length && ((subactive = subSteps.active) || (subactive === 0))) {
+            clearSub(subSteps[subactive]);
+            if (subactive) {
+                setActive(subSteps[--subactive]);
+                subSteps.active = subactive;
+            } else {
+                subSteps.active = null;
+            }
+            return;
+        }
+        next = steps.indexOf( active ) - 1;
+        next = next >= 0 ? steps[ next ] : steps[ steps.length-1 ];
+        if (!next.subSteps) {
+            setSubSteps(next);
+        }
+        if (next.subSteps.length &&
+            (next.subSteps.active !== (next.subSteps.length - 1))) {
+            slice.call(next.subSteps, 0, -1).forEach(setPrevious);
+            setActive(next.subSteps[next.subSteps.length - 1]);
+            next.subSteps.active = next.subSteps.length - 1;
+        }
+        select(next);
+    };
+
     document.addEventListener("keydown", function ( event ) {
         if ( event.keyCode == 9 || ( event.keyCode >= 32 && event.keyCode <= 34 ) || (event.keyCode >= 37 && event.keyCode <= 40) ) {
             var next = active;
@@ -263,20 +373,16 @@
                 case 33: ; // pg up
                 case 37: ; // left
                 case 38:   // up
-                         next = steps.indexOf( active ) - 1;
-                         next = next >= 0 ? steps[ next ] : steps[ steps.length-1 ];
+                         previousStep();
                          break;
                 case 9:  ; // tab
                 case 32: ; // space
                 case 34: ; // pg down
                 case 39: ; // right
                 case 40:   // down
-                         next = steps.indexOf( active ) + 1;
-                         next = next < steps.length ? steps[ next ] : steps[ 0 ];
+                         nextStep();
                          break; 
             }
-            
-            select(next);
             
             event.preventDefault();
         }
