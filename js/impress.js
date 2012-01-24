@@ -10,6 +10,7 @@
  */
 
 (function ( document, window ) {
+    'use strict';
 
     // HELPER FUNCTIONS
 
@@ -121,6 +122,11 @@
     // SETUP
     // set initial values and defaults
     
+    if (!window.IMPRESS) {
+        window.IMPRESS = {};
+    }
+    var conf = window.IMPRESS;
+
     document.documentElement.style.height = "100%";
     
     css(document.body, {
@@ -150,26 +156,26 @@
     };
 
     steps.forEach(function ( el, idx ) {
-        var data = el.dataset,
-            step = {
-                translate: {
-                    x: data.x || 0,
-                    y: data.y || 0,
-                    z: data.z || 0
-                },
-                rotate: {
-                    x: data.rotateX || 0,
-                    y: data.rotateY || 0,
-                    z: data.rotateZ || data.rotate || 0
-                },
-                scale: data.scale || 1
-            };
-        
-        el.stepData = step;
-        
         if ( !el.id ) {
             el.id = "step-" + (idx + 1);
         }
+        
+        var data = el.dataset, obj,
+            step = conf[el.id] || (conf[el.id] = {});
+
+        obj = step.translate || (step.translate = {});
+        (obj.x == null) && (obj.x = (data.x || 0));
+        (obj.y == null) && (obj.y = (data.y || 0));
+        (obj.z == null) && (obj.z = (data.z || 0));
+
+        obj = step.rotate || (step.rotate = {});
+        (obj.x == null) && (obj.x = (data.rotateX || 0));
+        (obj.y == null) && (obj.y = (data.rotateY || 0));
+        (obj.z == null) && (obj.z = (data.rotateZ || data.rotate || 0));
+
+        (step.scale == null) && (step.scale = data.scale || 1);
+        
+        el.stepData = step;
         
         css(el, {
             position: "absolute",
