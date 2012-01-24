@@ -73,19 +73,21 @@
     };
     
     var translate = function ( t ) {
-        return " translate3d(" + t.x + "px," + t.y + "px," + t.z + "px) ";
+        return " translate3d(" + (Number(t.x) || 0) + "px," +
+            (Number(t.y) || 0) + "px," + (Number(t.z) || 0) + "px) ";
     };
     
     var rotate = function ( r, revert ) {
-        var rX = " rotateX(" + r.x + "deg) ",
-            rY = " rotateY(" + r.y + "deg) ",
-            rZ = " rotateZ(" + r.z + "deg) ";
+        var rX = " rotateX(" + (Number(r.x) || 0) + "deg) ",
+            rY = " rotateY(" + (Number(r.y) || 0) + "deg) ",
+            rZ = " rotateZ(" + (Number(r) ||
+                 (isNaN(Number(r)) && Number(r.z)) || 0) + "deg) ";
         
         return revert ? rZ+rY+rX : rX+rY+rZ;
     };
     
     var scale = function ( s ) {
-        return " scale(" + s + ") ";
+        return " scale(" + (Number(s) || 0) + ") ";
     }
     
     // CHECK SUPPORT
@@ -156,27 +158,28 @@
             el.id = "step-" + (idx + 1);
         }
         
-        var data = el.dataset, obj,
+        var data = el.dataset,
             step = conf[el.id] || (conf[el.id] = {});
 
-        obj = step.translate || (step.translate = {});
-        (obj.x == null) && (obj.x = (data.x || 0));
-        (obj.y == null) && (obj.y = (data.y || 0));
-        (obj.z == null) && (obj.z = (data.z || 0));
-
-        obj = step.rotate || (step.rotate = {});
-        (obj.x == null) && (obj.x = (data.rotateX || 0));
-        (obj.y == null) && (obj.y = (data.rotateY || 0));
-        (obj.z == null) && (obj.z = (data.rotateZ || data.rotate || 0));
-
-        (step.scale == null) && (step.scale = data.scale || 1);
+        (step.x == null) && (step.x = (Number(data.x) || 0));
+        (step.y == null) && (step.y = (Number(data.y) || 0));
+        (step.z == null) && (step.z = (Number(data.z) || 0));
+        (step.rotate == null) &&
+            (step.rotate = Number(data.rotateZ) ||
+                (isNaN(Number(data.rotateZ)) && Number(data.rotate)) || 0);
+        if (data.rotateX || data.rotateY) {
+            (typeof step.rotate !== 'object') && (step.rotate = { z: step.rotate });
+            (step.rotate.x == null) && (step.rotate.x = (data.rotateX || 0));
+            (step.rotate.y == null) && (step.rotate.y = (data.rotateY || 0));
+        }
+        (step.scale == null) && (step.scale = Number(data.scale) || 1);
         
         el.stepData = step;
         
         css(el, {
             position: "absolute",
             transform: "translate(-50%,-50%)" +
-                       translate(step.translate) +
+                       translate(step) +
                        rotate(step.rotate) +
                        scale(step.scale),
             transformStyle: "preserve-3d"
@@ -226,16 +229,17 @@
         
         var target = {
             rotate: {
-                x: -parseInt(step.rotate.x, 10),
-                y: -parseInt(step.rotate.y, 10),
-                z: -parseInt(step.rotate.z, 10)
+                x: -(Number(step.rotate.x) || 0),
+                y: -(Number(step.rotate.y) || 0),
+                z: -(Number(step.rotate.z) ||
+                    (isNaN(Number(step.rotate.z)) && Number(step.rotate)) || 0)
             },
             translate: {
-                x: -step.translate.x,
-                y: -step.translate.y,
-                z: -step.translate.z
+                x: -(Number(step.x) || 0),
+                y: -(Number(step.y) || 0),
+                z: -(Number(step.z) || 0)
             },
-            scale: 1 / parseFloat(step.scale)
+            scale: 1 / (Number(step.scale) || 1)
         };
         
         // check if the transition is zooming in or not
