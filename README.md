@@ -20,6 +20,14 @@ It's an (un)fortunate coincidence that a Open/LibreOffice presentation tool is c
 VERSION HISTORY
 -----------------
 
+### master (in development)
+
+**CONTAINS UNRELEASED CHANGES, MAY BE UNSTABLE**
+
+* code clean-up
+* couple of small bug-fixes
+
+
 ### 0.1 ([browse](https://github.com/bartaz/impress.js/tree/0.1), [zip](https://github.com/bartaz/impress.js/zipball/0.1), [tar](https://github.com/bartaz/impress.js/tarball/0.1))
 
 First release.
@@ -28,15 +36,37 @@ Contains basic functionality for step placement and transitions between them
 with simple fallback for non-supporting browsers.
 
 
-DEMO
-------
+EXAMPLES AND DEMOS
+--------------------
 
-[impress.js demo](http://bartaz.github.com/impress.js) by @bartaz
+### Official demo
+
+[impress.js demo](http://bartaz.github.com/impress.js) by [@bartaz](http://twitter.com/bartaz)
+
+### Presentations
+
+[CSS 3D transforms](http://bartaz.github.com/meetjs/css3d-summit) from [meet.js summit](http://summit.meetjs.pl) by [@bartaz](http://twitter.com/bartaz)
 
 [What the Heck is Responsive Web Design](http://johnpolacek.github.com/WhatTheHeckIsResponsiveWebDesign-impressjs/) by John Polacek [@johnpolacek](http://twitter.com/johnpolacek)
 
+[12412.org presentation to Digibury](http://extra.12412.org/digibury/) by Stephen Fulljames [@fulljames](http://twitter.com/fulljames)
 
-If you have used impress.js in your presentation and would like to have it listed here,
+[Data center virtualization with Wakame-VDC](http://wakame.jp/wiki/materials/20120114_TLUG/) by Andreas Kieckens [@Metallion98](https://twitter.com/#!/Metallion98)
+
+[Asynchronous JavaScript](http://www.medikoo.com/asynchronous-javascript/#/asynchronous-javascript) by Mariusz Nowak [@medikoo](http://twitter.com/medikoo)
+
+### Websites and portfolios
+
+[lioshi.com](http://lioshi.com) by @lioshi
+
+[alingham.com](http://www.alingham.com) by Al Ingham [@alingham](http://twitter.com/alingham)
+
+[nice-shots.de](http://nice-shots.de) by [@NiceShots](http://twitter.com/NiceShots)
+
+[museum140](http://www.youtube.com/watch?v=ObLiikJEt94) Shorty Award promo video [entirely made with ImpressJS](http://thingsinjars.com/post/446/museum140-shorty/) by [@thingsinjars](http://twitter.com/thingsinjars)
+
+
+If you have used impress.js in your presentation (or website) and would like to have it listed here,
 please contact me via GitHub or send me a pull request to updated `README.md` file.
 
 
@@ -47,8 +77,8 @@ BROWSER SUPPORT
 ### TL;DR;
 
 Currently impress.js works fine in latest Chrome/Chromium browser, Safari 5.1 and Firefox 10
-(to be released in January 2012). IE10 support is currently unknown, so let's assume it doesn't
-work there. It also doesn't work in Opera.
+(to be released in January 2012). IE is currently not supported (IE10 is close, but not there
+yet - see below for details). It also doesn't work in Opera.
 
 As it was not developed with mobile browsers in mind, it currently doesn't work on 
 any mobile devices, including tablets.
