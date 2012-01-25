@@ -104,11 +104,11 @@ hljs.initHighlightingOnLoad();
       , keys = Object.keys
       , steps = document.querySelectorAll("div.step:not(#overview)")
 
-    forEach.call(steps, function (dom, index) {
-        var counter = dom.appendChild(document.createElement("div"));
-        counter.className = "counter";
-        counter.innerHTML = (index + 1) + " / " + steps.length;
-    });
+    // forEach.call(steps, function (dom, index) {
+    //     var counter = dom.appendChild(document.createElement("div"));
+    //     counter.className = "counter";
+    //     counter.innerHTML = (index + 1) + " / " + steps.length;
+    // });
 
     var start = Date.now();
     var timerDom = document.getElementById('timer')
