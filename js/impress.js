@@ -126,8 +126,6 @@
     // SETUP
     // set initial values and defaults
     
-    var conf = impress.steps = {};
-
     document.documentElement.style.height = "100%";
     
     css(document.body, {
@@ -355,6 +353,7 @@
     }
 
     impress.init = function () {
+        var conf = impress.steps || (impress.steps = {});
 
         steps.forEach(function ( el, idx ) {
             if ( !el.id ) {
