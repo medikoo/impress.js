@@ -1,4 +1,4 @@
-window.IMPRESS = {
+impress.steps = {
     "asynchronous-javascript": {
         x: -300, y: -600, scale: 5 },
     "why-asynchronous": {
@@ -92,7 +92,10 @@ window.IMPRESS = {
         x: 6400, y: 1600, scale: 5 }
 };
 
+impress.init();
+
 hljs.initHighlightingOnLoad();
+
 (function () {
     var forEach = Array.prototype.forEach
       , keys = Object.keys
