@@ -12,6 +12,8 @@
 (function ( document, window ) {
     'use strict';
 
+    var impress = window.impress = {};
+
     // HELPER FUNCTIONS
     
     var pfx = (function () {
@@ -98,32 +100,29 @@
     
     // DOM ELEMENTS
     
-    var impress = byId("impress");
+    var impressEl = byId("impress");
     
     if (!impressSupported) {
-        impress.className = "impress-not-supported";
+        impressEl.className = "impress-not-supported";
         return;
     } else {
-        impress.className = "";
+        impressEl.className = "";
     }
     
     var canvas = document.createElement("div");
     canvas.className = "canvas";
     
-    arrayify( impress.childNodes ).forEach(function ( el ) {
+    arrayify( impressEl.childNodes ).forEach(function ( el ) {
         canvas.appendChild( el );
     });
-    impress.appendChild(canvas);
+    impressEl.appendChild(canvas);
     
-    var steps = $$(".step", impress);
+    var steps = $$(".step", impressEl);
     
     // SETUP
     // set initial values and defaults
     
-    if (!window.IMPRESS) {
-        window.IMPRESS = {};
-    }
-    var conf = window.IMPRESS;
+    var conf = impress.steps = {};
 
     document.documentElement.style.height = "100%";
     
@@ -139,8 +138,8 @@
         transformStyle: "preserve-3d"
     }
     
-    css(impress, props);
-    css(impress, {
+    css(impressEl, props);
+    css(impressEl, {
         top: "50%",
         left: "50%",
         perspective: "1000px"
@@ -152,40 +151,6 @@
         rotate:    { x: 0, y: 0, z: 0 },
         scale:     1
     };
-
-    steps.forEach(function ( el, idx ) {
-        if ( !el.id ) {
-            el.id = "step-" + (idx + 1);
-        }
-        
-        var data = el.dataset,
-            step = conf[el.id] || (conf[el.id] = {});
-
-        (step.x == null) && (step.x = (Number(data.x) || 0));
-        (step.y == null) && (step.y = (Number(data.y) || 0));
-        (step.z == null) && (step.z = (Number(data.z) || 0));
-        (step.rotate == null) &&
-            (step.rotate = Number(data.rotateZ) ||
-                (isNaN(data.rotateZ) && Number(data.rotate)) || 0);
-        if (data.rotateX || data.rotateY) {
-            (typeof step.rotate !== 'object') && (step.rotate = { z: step.rotate });
-            (step.rotate.x == null) && (step.rotate.x = (data.rotateX || 0));
-            (step.rotate.y == null) && (step.rotate.y = (data.rotateY || 0));
-        }
-        (step.scale == null) && (step.scale = Number(data.scale) || 1);
-        
-        el.stepData = step;
-        
-        css(el, {
-            position: "absolute",
-            transform: "translate(-50%,-50%)" +
-                       translate(step) +
-                       rotate(step.rotate) +
-                       scale(step.scale),
-            transformStyle: "preserve-3d"
-        });
-        
-    });
 
     // making given step active
 
@@ -215,7 +180,7 @@
         }
         el.classList.add("active");
         
-        impress.className = "step-" + el.id;
+        impressEl.className = "step-" + el.id;
         
         // `#/step-id` is used instead of `#step-id` to prevent default browser
         // scrolling to element in hash
@@ -249,7 +214,7 @@
         // don't animate (set duration to 0)
         var duration = (active) ? "1s" : "0";
         
-        css(impress, {
+        css(impressEl, {
             // to keep the perspective look similar for different scales
             // we need to 'scale' the perspective, too
             perspective: step.scale * 1000 + "px",
@@ -284,66 +249,104 @@
         return select(next);
     };
     
-    // EVENTS
-    
-    document.addEventListener("keydown", function ( event ) {
-        if ( event.keyCode == 9 || ( event.keyCode >= 32 && event.keyCode <= 34 ) || (event.keyCode >= 37 && event.keyCode <= 40) ) {
-            switch( event.keyCode ) {
-                case 33: ; // pg up
-                case 37: ; // left
-                case 38:   // up
-                         selectPrev();
-                         break;
-                case 9:  ; // tab
-                case 32: ; // space
-                case 34: ; // pg down
-                case 39: ; // right
-                case 40:   // down
-                         selectNext();
-                         break;
-            }
-            
-            event.preventDefault();
-        }
-    }, false);
-
-    document.addEventListener("click", function ( event ) {
-        // event delegation with "bubbling"
-        // check if event target (or any of its parents is a link or a step)
-        var target = event.target;
-        while ( (target.tagName != "A") &&
-                (!target.stepData) &&
-                (target != document.body) ) {
-            target = target.parentNode;
-        }
-        
-        if ( target.tagName == "A" ) {
-            var href = target.getAttribute("href");
-            
-            // if it's a link to presentation step, target this step
-            if ( href && href[0] == '#' ) {
-                target = byId( href.slice(1) );
-            }
-        }
-        
-        if ( select(target) ) {
-            event.preventDefault();
-        }
-    }, false);
-    
     var getElementFromUrl = function () {
         // get id from url # by removing `#` or `#/` from the beginning,
         // so both "fallback" `#slide-id` and "enhanced" `#/slide-id` will work
         return byId( window.location.hash.replace(/^#\/?/,"") );
     }
-    
-    window.addEventListener("hashchange", function () {
-        select( getElementFromUrl() );
-    }, false);
-    
-    // START 
-    // by selecting step defined in url or first step of the presentation
-    select(getElementFromUrl() || steps[0]);
+
+    impress.init = function () {
+
+        steps.forEach(function ( el, idx ) {
+            if ( !el.id ) {
+                el.id = "step-" + (idx + 1);
+            }
+
+            var data = el.dataset,
+            step = conf[el.id] || (conf[el.id] = {});
+
+            (step.x == null) && (step.x = (Number(data.x) || 0));
+            (step.y == null) && (step.y = (Number(data.y) || 0));
+            (step.z == null) && (step.z = (Number(data.z) || 0));
+            (step.rotate == null) &&
+                (step.rotate = Number(data.rotateZ) ||
+                    (isNaN(data.rotateZ) && Number(data.rotate)) || 0);
+            if (data.rotateX || data.rotateY) {
+                (typeof step.rotate !== 'object') && (step.rotate = { z: step.rotate });
+                (step.rotate.x == null) && (step.rotate.x = (data.rotateX || 0));
+                (step.rotate.y == null) && (step.rotate.y = (data.rotateY || 0));
+            }
+            (step.scale == null) && (step.scale = Number(data.scale) || 1);
+
+            el.stepData = step;
+
+            css(el, {
+                position: "absolute",
+                transform: "translate(-50%,-50%)" +
+                    translate(step) +
+                    rotate(step.rotate) +
+                    scale(step.scale),
+                transformStyle: "preserve-3d"
+            });
+
+        });
+
+        // EVENTS
+
+        document.addEventListener("keydown", function ( event ) {
+            if ( event.keyCode == 9 || ( event.keyCode >= 32 && event.keyCode <= 34 ) || (event.keyCode >= 37 && event.keyCode <= 40) ) {
+                switch( event.keyCode ) {
+                case 33: ; // pg up
+                case 37: ; // left
+                case 38:   // up
+                    selectPrev();
+                    break;
+                case 9:  ; // tab
+                case 32: ; // space
+                case 34: ; // pg down
+                case 39: ; // right
+                case 40:   // down
+                    selectNext();
+                    break;
+                }
+
+                event.preventDefault();
+            }
+        }, false);
+
+        document.addEventListener("click", function ( event ) {
+            // event delegation with "bubbling"
+            // check if event target (or any of its parents is a link or a step)
+            var target = event.target;
+            while ( (target.tagName != "A") &&
+                (!target.stepData) &&
+                (target != document.body) ) {
+                target = target.parentNode;
+            }
+
+            if ( target.tagName == "A" ) {
+                var href = target.getAttribute("href");
+
+                // if it's a link to presentation step, target this step
+                if ( href && href[0] == '#' ) {
+                    target = byId( href.slice(1) );
+                }
+            }
+
+            if ( select(target) ) {
+                event.preventDefault();
+            }
+        }, false);
+
+        window.addEventListener("hashchange", function () {
+            select( getElementFromUrl() );
+        }, false);
+
+        // START
+        // by selecting step defined in url or first step of the presentation
+        select(getElementFromUrl() || steps[0]);
+
+    };
 
 })(document, window);
 
