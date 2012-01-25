@@ -287,35 +287,6 @@
         data.classList.remove('previous');
     };
 
-    var selectNext = function () {
-        var subactive, next, subSteps;
-        if (!active.subSteps) {
-            setSubSteps(active);
-        }
-        subSteps = active.subSteps;
-        if (subSteps.length && ((subactive = subSteps.active) !==
-            (subSteps.length - 1))) {
-            if (subactive != null) {
-                setPrevious(subSteps[subactive]);
-            } else {
-                subactive = -1;
-            }
-            setActive(subSteps[++subactive]);
-            subSteps.active = subactive;
-            return;
-        }
-        next = steps.indexOf( active ) + 1;
-        next = next < steps.length ? steps[ next ] : steps[ 0 ];
-        if (!next.subSteps) {
-            setSubSteps(next);
-        }
-        if (next.subSteps.active != null) {
-            forEach.call(next.subSteps, clearSub);
-            next.subSteps.active = null;
-        }
-        select(next);
-    };
-
     var selectPrev = function () {
         var subactive, next, subSteps;
         if (!active.subSteps) {
@@ -342,6 +313,35 @@
             slice.call(next.subSteps, 0, -1).forEach(setPrevious);
             setActive(next.subSteps[next.subSteps.length - 1]);
             next.subSteps.active = next.subSteps.length - 1;
+        }
+        select(next);
+    };
+
+    var selectNext = function () {
+        var subactive, next, subSteps;
+        if (!active.subSteps) {
+            setSubSteps(active);
+        }
+        subSteps = active.subSteps;
+        if (subSteps.length && ((subactive = subSteps.active) !==
+            (subSteps.length - 1))) {
+            if (subactive != null) {
+                setPrevious(subSteps[subactive]);
+            } else {
+                subactive = -1;
+            }
+            setActive(subSteps[++subactive]);
+            subSteps.active = subactive;
+            return;
+        }
+        next = steps.indexOf( active ) + 1;
+        next = next < steps.length ? steps[ next ] : steps[ 0 ];
+        if (!next.subSteps) {
+            setSubSteps(next);
+        }
+        if (next.subSteps.active != null) {
+            forEach.call(next.subSteps, clearSub);
+            next.subSteps.active = null;
         }
         select(next);
     };
