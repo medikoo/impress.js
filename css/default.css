@@ -25,10 +25,10 @@ h1 {
 }
 h2 { font-size: 2em; text-align: center; margin: 0.3em 0; }
 
-h3 { margin-bottom: 0.5em; color: #ddd; font-weight: normal; }
+h3 { margin-bottom: 0.5em; color: #ddd; font-weight: normal; font-size: 42px; }
 h3 b { font-size: 1.1em; }
 h3.lone { text-align: center; }
-h4 { color: #ddd; }
+h4 { color: #ddd; font-size: 36px; }
 
 img { opacity: 0.9; }
 
@@ -309,4 +309,8 @@ div.abs-box > :not(.base) {
 
 /* .impress-not-supported */ .hide-on-notsupported {
   visibility: hidden !important;
+}
+
+.impress-not-supported .hint {
+  display: none;
 }

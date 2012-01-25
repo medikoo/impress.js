@@ -100,6 +100,9 @@ if (location.pathname.match(/\/3d\/(?:index\.html)?$/)) {
 hljs.initHighlightingOnLoad();
 
 (function () {
+    if (!document.querySelector || !Array.prototype.forEach) {
+        return;
+    }
     var forEach = Array.prototype.forEach
       , keys = Object.keys
       , steps = document.querySelectorAll("div.step:not(#overview)")
