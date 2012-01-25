@@ -194,13 +194,13 @@ p.footer { font-size: 0.7em; text-align: right; margin-top: 4em; }
   line-height: 1.3;
   font-size: 0.7em;
 
-  display: none;
   width: 780px;
-  padding: 10px 10px 0;
+  padding: 10px 20px;
   margin: 20px auto;
 
+  display: none;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
+  background: #0f3584
 }
 
 .fallback-message p {
@@ -208,14 +208,14 @@ p.footer { font-size: 0.7em; text-align: right; margin-top: 4em; }
 }
 
 .impress-not-supported {
-  background: rgb(0, 67, 148);
+  background: #002570;
 }
 .impress-not-supported .step {
   position: relative;
   opacity: 1;
   min-height: 700px;
   margin: 200px auto;
-  background: rgba(255, 255, 255, 0.1);
+  background: #0f3584;
   display: -webkit-box;
   -webkit-box-pack: center;
   -webkit-box-align: center;
@@ -230,6 +230,11 @@ p.footer { font-size: 0.7em; text-align: right; margin-top: 4em; }
 .impress-not-supported .fallback-message {
   display: block;
 }
+
+.fallback-message.hidden {
+  display: none !important;
+}
+
 
 .impress-not-supported #overview {
   display: none;
