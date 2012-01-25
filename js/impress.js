@@ -86,8 +86,8 @@
     var rotate = function ( r, revert ) {
         var rX = " rotateX(" + (Number(r.x) || 0) + "deg) ",
             rY = " rotateY(" + (Number(r.y) || 0) + "deg) ",
-            rZ = " rotateZ(" + (Number(r) ||
-                 (isNaN(r) && Number(r.z)) || 0) + "deg) ";
+            rZ = " rotateZ(" + (Number(r.z) ||
+                 (isNaN(r.z) && Number(r)) || 0) + "deg) ";
         
         return revert ? rZ+rY+rX : rX+rY+rZ;
     };
@@ -196,10 +196,11 @@
         
         var target = {
             rotate: {
-                x: -(Number(step.rotate.x) || 0),
-                y: -(Number(step.rotate.y) || 0),
-                z: -(Number(step.rotate.z) ||
-                    (isNaN(step.rotate.z) && Number(step.rotate)) || 0)
+                x: -((step.rotate && Number(step.rotate.x)) || 0),
+                y: -((step.rotate && Number(step.rotate.y)) || 0),
+                z: -((step.rotate && Number(step.rotate.z)) ||
+                    ((!step.rotate || isNaN(step.rotate.z))
+                        && Number(step.rotate)) || 0)
             },
             translate: {
                 x: -(Number(step.x) || 0),
@@ -366,11 +367,10 @@
             (step.x == null) && (step.x = (Number(data.x) || 0));
             (step.y == null) && (step.y = (Number(data.y) || 0));
             (step.z == null) && (step.z = (Number(data.z) || 0));
-            (step.rotate == null) &&
-                (step.rotate = Number(data.rotateZ) ||
-                    (isNaN(data.rotateZ) && Number(data.rotate)) || 0);
+            (step.rotate == null) && (step.rotate = (Number(data.rotate) || 0));
             if (data.rotateX || data.rotateY) {
-                (typeof step.rotate !== 'object') && (step.rotate = { z: step.rotate });
+                (typeof step.rotate !== 'object') &&
+                    (step.rotate = { z: step.rotate });
                 (step.rotate.x == null) && (step.rotate.x = (data.rotateX || 0));
                 (step.rotate.y == null) && (step.rotate.y = (data.rotateY || 0));
             }
@@ -397,15 +397,15 @@
                 case 33: ; // pg up
                 case 37: ; // left
                 case 38:   // up
-                    selectPrev();
-                    break;
+                         selectPrev();
+                         break;
                 case 9:  ; // tab
                 case 32: ; // space
                 case 34: ; // pg down
                 case 39: ; // right
                 case 40:   // down
-                    selectNext();
-                    break;
+                         selectNext();
+                         break;
                 }
 
                 event.preventDefault();
