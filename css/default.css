@@ -278,13 +278,13 @@ div#timer {
   font-size: 1.4em;
 }
 
-#impress:not(.step-overview) .substep:not(.active):not(.previous) {
-  opacity: 0;
-}
+/* #impress:not(.step-overview) .substep:not(.active):not(.previous) { */
+/*   opacity: 0; */
+/* } */
 
-.impress-not-supported#impress:not(.step-overview) .substep:not(.active):not(.previous) {
-  opacity: 1;
-}
+/* .impress-not-supported#impress:not(.step-overview) .substep:not(.active):not(.previous) { */
+/*   opacity: 1; */
+/* } */
 
 
 .substep {
@@ -303,10 +303,10 @@ div.abs-box > :not(.base) {
   top: 0;
   left: 0;
 }
-div.abs-box > .previous:not(.keep) {
-  opacity: 0;
-}
+/* div.abs-box > .previous:not(.keep) { */
+/*   opacity: 0; */
+/* } */
 
-.impress-not-supported .hide-on-notsupported {
+/* .impress-not-supported */ .hide-on-notsupported {
   visibility: hidden !important;
 }

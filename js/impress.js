@@ -233,7 +233,7 @@
             setSubSteps(active);
         }
         subSteps = active.subSteps;
-        if (subSteps.length && ((subactive = subSteps.active) || (subactive === 0))) {
+        if (false && subSteps.length && ((subactive = subSteps.active) || (subactive === 0))) {
             clearSub(subSteps[subactive]);
             if (subactive) {
                 setActive(subSteps[--subactive]);
@@ -263,7 +263,7 @@
             setSubSteps(active);
         }
         subSteps = active.subSteps;
-        if (subSteps.length && ((subactive = subSteps.active) !==
+        if (false && subSteps.length && ((subactive = subSteps.active) !==
             (subSteps.length - 1))) {
             if (subactive != null) {
                 setPrevious(subSteps[subactive]);
