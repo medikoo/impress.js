@@ -92,69 +92,8 @@
         return " scale(" + s + ") ";
     }
     
-    // CHECK SUPPORT
-    
-    var ua = navigator.userAgent.toLowerCase();
-    var impressSupported = ( pfx("perspective") != null ) &&
-                           ( ua.search(/(iphone)|(ipod)|(ipad)|(android)/) == -1 );
-    
-    // DOM ELEMENTS
-    
-    var impressEl = byId("impress");
-    
-    if (!impressSupported) {
-        impressEl.className = "impress-not-supported";
-        return;
-    } else {
-        impressEl.className = "";
-    }
-    
-    var canvas = document.createElement("div");
-    canvas.className = "canvas";
-    
-    arrayify( impressEl.childNodes ).forEach(function ( el ) {
-        canvas.appendChild( el );
-    });
-    impressEl.appendChild(canvas);
-    
-    var steps = $$(".step", impressEl);
-    
-    // SETUP
-    // set initial values and defaults
-    
-    document.documentElement.style.height = "100%";
-    
-    css(document.body, {
-        height: "100%",
-        overflow: "hidden"
-    });
+    var impressEl, canvas, steps, current, active, hashTimeout;
 
-    var props = {
-        position: "absolute",
-        transformOrigin: "top left",
-        transition: "all 0s ease-in-out",
-        transformStyle: "preserve-3d"
-    }
-    
-    css(impressEl, props);
-    css(impressEl, {
-        top: "50%",
-        left: "50%",
-        perspective: "1000px"
-    });
-    css(canvas, props);
-    
-    var current = {
-        translate: { x: 0, y: 0, z: 0 },
-        rotate:    { x: 0, y: 0, z: 0 },
-        scale:     1
-    };
-
-    // making given step active
-
-    var active = null;
-    var hashTimeout = null;
-    
     var select = function ( el ) {
         if ( !el || !el.stepData || el == active) {
             // selected element is not defined as step or is already active
@@ -255,6 +194,69 @@
     }
 
     impress.init = function () {
+        // CHECK SUPPORT
+
+        var ua = navigator.userAgent.toLowerCase();
+        var impressSupported = ( pfx("perspective") != null ) &&
+            ( ua.search(/(iphone)|(ipod)|(ipad)|(android)/) == -1 );
+
+        // DOM ELEMENTS
+
+        impressEl = byId("impress");
+
+        if (!impressSupported) {
+            impressEl.className = "impress-not-supported";
+            return;
+        } else {
+            impressEl.className = "";
+        }
+
+        canvas = document.createElement("div");
+        canvas.className = "canvas";
+
+        arrayify( impressEl.childNodes ).forEach(function ( el ) {
+            canvas.appendChild( el );
+        });
+        impressEl.appendChild(canvas);
+
+        steps = $$(".step", impressEl);
+
+        // SETUP
+        // set initial values and defaults
+
+        document.documentElement.style.height = "100%";
+
+        css(document.body, {
+            height: "100%",
+            overflow: "hidden"
+        });
+
+        var props = {
+            position: "absolute",
+            transformOrigin: "top left",
+            transition: "all 0s ease-in-out",
+            transformStyle: "preserve-3d"
+        }
+
+        css(impressEl, props);
+        css(impressEl, {
+            top: "50%",
+            left: "50%",
+            perspective: "1000px"
+        });
+        css(canvas, props);
+
+        current = {
+            translate: { x: 0, y: 0, z: 0 },
+            rotate:    { x: 0, y: 0, z: 0 },
+            scale:     1
+        };
+
+        // making given step active
+
+        active = null;
+        hashTimeout = null;
+
         var conf = impress.steps || (impress.steps = {});
 
         steps.forEach(function ( el, idx ) {
