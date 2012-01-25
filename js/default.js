@@ -104,20 +104,10 @@ hljs.initHighlightingOnLoad();
       , keys = Object.keys
       , steps = document.querySelectorAll("div.step:not(#overview)")
 
-      , add;
-
-    add = function (node, name, num) {
-        var val;
-        node.setAttribute('data-' + name,
-            val = (Number(node.getAttribute('data-' + name)) + num));
-    };
-
     forEach.call(steps, function (dom, index) {
         var counter = dom.appendChild(document.createElement("div"));
         counter.className = "counter";
         counter.innerHTML = (index + 1) + " / " + steps.length;
-
-        // add(dom, 'y', -500);
     });
 
     var start = Date.now();
@@ -131,9 +121,9 @@ hljs.initHighlightingOnLoad();
         return ((min.length > 1) ? min : ('0' + min)) + ':' +
             ((sec.length > 1) ? sec : ('0' + sec));
     };
-    setInterval(function () {
-        timerDom.innerHTML = durationToStr();
-    }, 1000);
+    // setInterval(function () {
+    //     timerDom.innerHTML = durationToStr();
+    // }, 1000);
 
 
     window.addEventListener("hashchange", function () {
