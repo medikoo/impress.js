@@ -433,8 +433,12 @@
                 }
             }
 
-            if ( select(target) ) {
-                event.preventDefault();
+            if ((target.tagName == "A") || (active && (active.id == 'overview'))) {
+                if ( select(target) ) {
+                    event.preventDefault();
+                }
+            } else {
+                selectNext();
             }
         }, false);
 
