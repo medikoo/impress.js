@@ -81,7 +81,7 @@
         var rX = " rotateX(" + (Number(r.x) || 0) + "deg) ",
             rY = " rotateY(" + (Number(r.y) || 0) + "deg) ",
             rZ = " rotateZ(" + (Number(r) ||
-                 (isNaN(Number(r)) && Number(r.z)) || 0) + "deg) ";
+                 (isNaN(r) && Number(r.z)) || 0) + "deg) ";
         
         return revert ? rZ+rY+rX : rX+rY+rZ;
     };
@@ -166,7 +166,7 @@
         (step.z == null) && (step.z = (Number(data.z) || 0));
         (step.rotate == null) &&
             (step.rotate = Number(data.rotateZ) ||
-                (isNaN(Number(data.rotateZ)) && Number(data.rotate)) || 0);
+                (isNaN(data.rotateZ) && Number(data.rotate)) || 0);
         if (data.rotateX || data.rotateY) {
             (typeof step.rotate !== 'object') && (step.rotate = { z: step.rotate });
             (step.rotate.x == null) && (step.rotate.x = (data.rotateX || 0));
@@ -232,7 +232,7 @@
                 x: -(Number(step.rotate.x) || 0),
                 y: -(Number(step.rotate.y) || 0),
                 z: -(Number(step.rotate.z) ||
-                    (isNaN(Number(step.rotate.z)) && Number(step.rotate)) || 0)
+                    (isNaN(step.rotate.z) && Number(step.rotate)) || 0)
             },
             translate: {
                 x: -(Number(step.x) || 0),
