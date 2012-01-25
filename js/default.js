@@ -91,8 +91,11 @@ impress.steps = {
     "thank-you": {
         x: 6400, y: 1600, scale: 5 }
 };
-
-impress.init();
+if (location.pathname.match(/\/3d\/(?:index\.html)?$/)) {
+    document.getElementById('fm1').className = 'fallback-message';
+    document.getElementById('fm2').className = 'fallback-message hidden';
+    impress.init();
+}
 
 hljs.initHighlightingOnLoad();
 
