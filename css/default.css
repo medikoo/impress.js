@@ -4,10 +4,10 @@ body {
   font: 36px/1.5 'Droid Sans', 'Helvetica Neue', Arial, sans-serif;
 
   min-height: 740px;
-	text-shadow: -1px -1px 2px rgba(0, 0, 0,0.5);
+  text-shadow: -1px -1px 2px rgba(0, 0, 0,0.5);
 
-  color: #b2e2ff;
-  background: rgb(215, 215, 215);
+  color: #97c5e1;
+  background: #002570;
   background: -webkit-radial-gradient(center bottom, circle farthest-corner, #667bb3, rgb(0, 67, 148), rgb(0, 0, 0));
   background:    -moz-radial-gradient(center bottom, circle farthest-corner, #667bb3, rgb(0, 67, 148), rgb(0, 0, 0));
   background:      -o-radial-gradient(center bottom, circle farthest-corner, #667bb3, rgb(0, 67, 148), rgb(0, 0, 0));
@@ -18,13 +18,14 @@ body {
 
 h1, h2 {
   font-family: 'Expletus Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: normal;
 }
 h1 {
   font-size: 2.5em;
 }
 h2 { font-size: 2em; text-align: center; margin: 0.3em 0; }
 
-h3 { margin-bottom: 0.5em; color: #ddd; }
+h3 { margin-bottom: 0.5em; color: #ddd; font-weight: normal; }
 h3 b { font-size: 1.1em; }
 h3.lone { text-align: center; }
 h4 { color: #ddd; }
@@ -209,6 +210,8 @@ p.footer { font-size: 0.7em; text-align: right; margin-top: 4em; }
 
 .impress-not-supported {
   background: #002570;
+  overflow: hidden;
+  padding: 0 50px;
 }
 .impress-not-supported .step {
   position: relative;
@@ -217,14 +220,26 @@ p.footer { font-size: 0.7em; text-align: right; margin-top: 4em; }
   margin: 200px auto;
   background: #0f3584;
   display: -webkit-box;
+  display: -moz-box;
+  display: -o-box;
+  display: box;
   -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  box-pack: center;
   -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  box-align: center;
   -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -o-box-orient: vertical;
+  box-orient: vertical;
 }
 
 
 .impress-not-supported .step > * {
-  width: 100%;
+  width: 820px;
 }
 
 .impress-not-supported .fallback-message {
