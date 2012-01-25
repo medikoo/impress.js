@@ -93,7 +93,7 @@
     };
     
     var scale = function ( s ) {
-        return " scale(" + (Number(s) || 0) + ") ";
+        return " scale(" + s + ") ";
     }
     
     // CHECK SUPPORT
@@ -383,7 +383,7 @@
                 transform: "translate(-50%,-50%)" +
                     translate(step) +
                     rotate(step.rotate) +
-                    scale(step.scale),
+                    scale(Number(step.scale) || 1),
                 transformStyle: "preserve-3d"
             });
 
