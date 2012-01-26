@@ -257,13 +257,18 @@ p.footer { font-size: 0.7em; text-align: right; margin-top: 4em; }
 
 .step div.counter {
   position: absolute;
-  top: 1em;
+  top: -2em;
   right: 1em;
-  font-size: 12px;
-  opacity: 0.1;
+  font-size: 16px;
+  opacity: 0.3;
   width: auto;
 }
 
+.wrap {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
 div#timer {
   position: fixed;
   right: 1em;

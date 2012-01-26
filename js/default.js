@@ -105,13 +105,21 @@ hljs.initHighlightingOnLoad();
     }
     var forEach = Array.prototype.forEach
       , keys = Object.keys
-      , steps = document.querySelectorAll("div.step:not(#overview)")
+      , steps = document.querySelectorAll("div.step")
 
-    // forEach.call(steps, function (dom, index) {
-    //     var counter = dom.appendChild(document.createElement("div"));
-    //     counter.className = "counter";
-    //     counter.innerHTML = (index + 1) + " / " + steps.length;
-    // });
+    forEach.call(steps, function (dom, index) {
+        if (dom.id !== 'overview') {
+            var wrap = document.createElement("div");
+            wrap.className = 'wrap';
+            while (dom.firstChild) {
+                wrap.appendChild(dom.firstChild);
+            }
+            dom.appendChild(wrap);
+            var counter = wrap.appendChild(document.createElement('div'));
+            counter.className = "counter";
+            counter.innerHTML = (index + 1) + " / " + steps.length;
+        }
+    });
 
     var start = Date.now();
     var timerDom = document.getElementById('timer')
