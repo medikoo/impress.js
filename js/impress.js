@@ -12,13 +12,11 @@
 (function ( document, window ) {
     'use strict';
 
-    var impress = window.impress = {};
+var impress = window.impress = {};
+
+impress.init = function ( options ) {
 
     // HELPER FUNCTIONS
-
-    var forEach = Array.prototype.forEach,
-        slice = Array.prototype.slice,
-        isArray = Array.isArray;
     
     var pfx = (function () {
 
@@ -79,15 +77,13 @@
     };
     
     var translate = function ( t ) {
-        return " translate3d(" + (Number(t.x) || 0) + "px," +
-            (Number(t.y) || 0) + "px," + (Number(t.z) || 0) + "px) ";
+        return " translate3d(" + t.x + "px," + t.y + "px," + t.z + "px) ";
     };
     
     var rotate = function ( r, revert ) {
-        var rX = " rotateX(" + (Number(r.x) || 0) + "deg) ",
-            rY = " rotateY(" + (Number(r.y) || 0) + "deg) ",
-            rZ = " rotateZ(" + (Number(r.z) ||
-                 (isNaN(r.z) && Number(r)) || 0) + "deg) ";
+        var rX = " rotateX(" + r.x + "deg) ",
+            rY = " rotateY(" + r.y + "deg) ",
+            rZ = " rotateZ(" + r.z + "deg) ";
         
         return revert ? rZ+rY+rX : rX+rY+rZ;
     };
@@ -96,8 +92,113 @@
         return " scale(" + s + ") ";
     }
     
-    var impressEl, canvas, steps, current, active, hashTimeout;
+    // CHECK SUPPORT
+    
+    var ua = navigator.userAgent.toLowerCase();
+    var impressSupported = ( pfx("perspective") != null ) &&
+                           ( ua.search(/(iphone)|(ipod)|(ipad)|(android)/) == -1 );
+    
+    // DOM ELEMENTS
+    
+    var impressEl = byId("impress");
+    
+    if (!impressSupported) {
+        impressEl.className = "impress-not-supported";
+        return;
+    } else {
+        impressEl.className = "";
+    }
+    
+    var canvas = document.createElement("div");
+    canvas.className = "canvas";
+    
+    arrayify( impressEl.childNodes ).forEach(function ( el ) {
+        canvas.appendChild( el );
+    });
+    impressEl.appendChild(canvas);
+    
+    var steps = $$(".step", impressEl);
+    
+    // SETUP
+    // set initial values and defaults
+    
+    document.documentElement.style.height = "100%";
+    
+    css(document.body, {
+        height: "100%",
+        overflow: "hidden"
+    });
 
+    var props = {
+        position: "absolute",
+        transformOrigin: "top left",
+        transition: "all 0s ease-in-out",
+        transformStyle: "preserve-3d"
+    }
+    
+    css(impressEl, props);
+    css(impressEl, {
+        top: "50%",
+        left: "50%",
+        perspective: "1000px"
+    });
+    css(canvas, props);
+    
+    var current = {
+        translate: { x: 0, y: 0, z: 0 },
+        rotate:    { x: 0, y: 0, z: 0 },
+        scale:     1
+    };
+
+    steps.forEach(function ( el, idx ) {
+        if ( !el.id ) {
+            el.id = "step-" + (idx + 1);
+        }
+        
+        var conf = options && options.steps && options.steps[el.id],
+            data = el.dataset,
+            step = {
+                translate: {
+                    x: (!conf || isNaN(conf.x)) ?
+                        (Number(data.x) || 0) : Number(conf.x),
+                    y: (!conf || isNaN(conf.y)) ?
+                        (Number(data.y) || 0) : Number(conf.y),
+                    z: (!conf || isNaN(conf.z)) ?
+                        (Number(data.z) || 0) : Number(conf.z)
+                },
+                rotate: {
+                    x: (!conf || !conf.rotate || isNaN(conf.rotate.x)) ?
+                        (Number(data.rotateX) || 0) : Number(conf.rotate.x),
+                    y: (!conf || !conf.rotate || isNaN(conf.rotate.y)) ?
+                        (Number(data.rotateY) || 0) : Number(conf.rotate.y),
+                    z: (conf && conf.rotate && !isNaN(conf.rotate.z)) ?
+                        Number(conf.rotate.z) :
+                        ((conf && !isNaN(conf.rotate)) ? Number(conf.rotate) :
+                            (!isNaN(data.rotateZ) ? Number(data.rotateZ) :
+                                (Number(data.rotate) || 0)))
+                },
+                scale: (!conf || isNaN(conf.scale)) ?
+                    (Number(data.scale) || 1) : Number(conf.scale)
+            };
+        
+        el.stepData = step;
+        
+        css(el, {
+            position: "absolute",
+            transform: "translate(-50%,-50%)" +
+                       translate(step.translate) +
+                       rotate(step.rotate) +
+                       scale(step.scale),
+            transformStyle: "preserve-3d"
+        });
+        
+    });
+
+    // making given step active
+
+    var active = null;
+    var hashTimeout = null;
+    
     var select = function ( el ) {
         if ( !el || !el.stepData || el == active) {
             // selected element is not defined as step or is already active
@@ -135,18 +236,16 @@
         
         var target = {
             rotate: {
-                x: -((step.rotate && Number(step.rotate.x)) || 0),
-                y: -((step.rotate && Number(step.rotate.y)) || 0),
-                z: -((step.rotate && Number(step.rotate.z)) ||
-                    ((!step.rotate || isNaN(step.rotate.z))
-                        && Number(step.rotate)) || 0)
+                x: -parseInt(step.rotate.x, 10),
+                y: -parseInt(step.rotate.y, 10),
+                z: -parseInt(step.rotate.z, 10)
             },
             translate: {
-                x: -(Number(step.x) || 0),
-                y: -(Number(step.y) || 0),
-                z: -(Number(step.z) || 0)
+                x: -step.translate.x,
+                y: -step.translate.y,
+                z: -step.translate.z
             },
-            scale: 1 / (Number(step.scale) || 1)
+            scale: 1 / parseFloat(step.scale)
         };
         
         // check if the transition is zooming in or not
@@ -177,9 +276,10 @@
         return el;
     };
     
-    
-    // EVENTS
-    
+    var forEach = Array.prototype.forEach,
+        slice = Array.prototype.slice,
+        isArray = Array.isArray;
+
     var setSubSteps = function (el) {
         var steps = el.querySelectorAll(".substep"),
         order = [], unordered = [];
@@ -286,116 +386,12 @@
         select(next);
     };
 
-    var getElementFromUrl = function () {
-        // get id from url # by removing `#` or `#/` from the beginning,
-        // so both "fallback" `#slide-id` and "enhanced" `#/slide-id` will work
-        return byId( window.location.hash.replace(/^#\/?/,"") );
-    }
-
-    impress.init = function () {
-        // CHECK SUPPORT
-
-        var ua = navigator.userAgent.toLowerCase();
-        var impressSupported = ( pfx("perspective") != null ) &&
-            ( ua.search(/(iphone)|(ipod)|(ipad)|(android)/) == -1 );
-
-        // DOM ELEMENTS
-
-        impressEl = byId("impress");
-
-        if (!impressSupported) {
-            impressEl.className = "impress-not-supported";
-            return;
-        } else {
-            impressEl.className = "";
-        }
-
-        canvas = document.createElement("div");
-        canvas.className = "canvas";
-
-        arrayify( impressEl.childNodes ).forEach(function ( el ) {
-            canvas.appendChild( el );
-        });
-        impressEl.appendChild(canvas);
-
-        steps = $$(".step", impressEl);
-
-        // SETUP
-        // set initial values and defaults
-
-        document.documentElement.style.height = "100%";
-
-        css(document.body, {
-            height: "100%",
-            overflow: "hidden"
-        });
-
-        var props = {
-            position: "absolute",
-            transformOrigin: "top left",
-            transition: "all 0s ease-in-out",
-            transformStyle: "preserve-3d"
-        }
-
-        css(impressEl, props);
-        css(impressEl, {
-            top: "50%",
-            left: "50%",
-            perspective: "1000px"
-        });
-        css(canvas, props);
-
-        current = {
-            translate: { x: 0, y: 0, z: 0 },
-            rotate:    { x: 0, y: 0, z: 0 },
-            scale:     1
-        };
-
-        // making given step active
-
-        active = null;
-        hashTimeout = null;
-
-        var conf = impress.steps || (impress.steps = {});
-
-        steps.forEach(function ( el, idx ) {
-            if ( !el.id ) {
-                el.id = "step-" + (idx + 1);
-            }
-
-            var data = el.dataset,
-            step = conf[el.id] || (conf[el.id] = {});
-
-            (step.x == null) && (step.x = (Number(data.x) || 0));
-            (step.y == null) && (step.y = (Number(data.y) || 0));
-            (step.z == null) && (step.z = (Number(data.z) || 0));
-            (step.rotate == null) && (step.rotate = (Number(data.rotate) || 0));
-            if (data.rotateX || data.rotateY) {
-                (typeof step.rotate !== 'object') &&
-                    (step.rotate = { z: step.rotate });
-                (step.rotate.x == null) && (step.rotate.x = (data.rotateX || 0));
-                (step.rotate.y == null) && (step.rotate.y = (data.rotateY || 0));
-            }
-            (step.scale == null) && (step.scale = Number(data.scale) || 1);
-
-            el.stepData = step;
-
-            css(el, {
-                position: "absolute",
-                transform: "translate(-50%,-50%)" +
-                    translate(step) +
-                    rotate(step.rotate) +
-                    scale(Number(step.scale) || 1),
-                transformStyle: "preserve-3d"
-            });
-
-        });
-
-        // EVENTS
-
-        document.addEventListener("keydown", function ( event ) {
-            if ( event.keyCode == 9 || ( event.keyCode >= 32 && event.keyCode <= 34 ) || (event.keyCode >= 37 && event.keyCode <= 40) ) {
-                switch( event.keyCode ) {
+    
+    // EVENTS
+    
+    document.addEventListener("keydown", function ( event ) {
+        if ( event.keyCode == 9 || ( event.keyCode >= 32 && event.keyCode <= 34 ) || (event.keyCode >= 37 && event.keyCode <= 40) ) {
+            switch( event.keyCode ) {
                 case 33: ; // pg up
                 case 37: ; // left
                 case 38:   // up
@@ -408,49 +404,51 @@
                 case 40:   // down
                          selectNext();
                          break;
-                }
-
-                event.preventDefault();
             }
-        }, false);
+            
+            event.preventDefault();
+        }
+    }, false);
 
-        document.addEventListener("click", function ( event ) {
-            // event delegation with "bubbling"
-            // check if event target (or any of its parents is a link or a step)
-            var target = event.target;
-            while ( (target.tagName != "A") &&
+    document.addEventListener("click", function ( event ) {
+        // event delegation with "bubbling"
+        // check if event target (or any of its parents is a link or a step)
+        var target = event.target;
+        while ( (target.tagName != "A") &&
                 (!target.stepData) &&
                 (target != document.body) ) {
-                target = target.parentNode;
+            target = target.parentNode;
+        }
+        
+        if ( target.tagName == "A" ) {
+            var href = target.getAttribute("href");
+            
+            // if it's a link to presentation step, target this step
+            if ( href && href[0] == '#' ) {
+                target = byId( href.slice(1) );
             }
+        }
+        
+        if ( select(target) ) {
+            event.preventDefault();
+        }
+    }, false);
+    
+    var getElementFromUrl = function () {
+        // get id from url # by removing `#` or `#/` from the beginning,
+        // so both "fallback" `#slide-id` and "enhanced" `#/slide-id` will work
+        return byId( window.location.hash.replace(/^#\/?/,"") );
+    }
+    
+    window.addEventListener("hashchange", function () {
+        select( getElementFromUrl() );
+    }, false);
+    
+    // START 
+    // by selecting step defined in url or first step of the presentation
+    select(getElementFromUrl() || steps[0]);
 
-            if ( target.tagName == "A" ) {
-                var href = target.getAttribute("href");
-
-                // if it's a link to presentation step, target this step
-                if ( href && href[0] == '#' ) {
-                    target = byId( href.slice(1) );
-                }
-            }
-
-            if ((target.tagName == "A") || (active && (active.id == 'overview'))) {
-                if ( select(target) ) {
-                    event.preventDefault();
-                }
-            } else {
-                selectNext();
-            }
-        }, false);
-
-        window.addEventListener("hashchange", function () {
-            select( getElementFromUrl() );
-        }, false);
-
-        // START
-        // by selecting step defined in url or first step of the presentation
-        select(getElementFromUrl() || steps[0]);
-
-    };
+};
 
 })(document, window);
 
