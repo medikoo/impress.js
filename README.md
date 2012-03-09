@@ -20,13 +20,24 @@ It's an (un)fortunate coincidence that a Open/LibreOffice presentation tool is c
 VERSION HISTORY
 -----------------
 
-### master (in development)
+### 0.4pre ([browse](http://github.com/bartaz/impress.js/))
 
-**CONTAINS UNRELEASED CHANGES, MAY BE UNSTABLE**
+**currently in development**
+
+
+### 0.3 ([browse](http://github.com/bartaz/impress.js/tree/0.3), [zip](http://github.com/bartaz/impress.js/zipball/0.3), [tar](http://github.com/bartaz/impress.js/tarball/0.3))
 
 * minor CSS 3D fixes
 * basic API to control the presentation flow from JavaScript
 * touch event support
+* basic support for iPad (iOS 5 and iOS 4 with polyfills) and Blackberry Playbook
+
+**UPGRADING FROM PREVIOUS VERSIONS**
+
+Because API was introduced the way impress.js script is initialized was changed a bit. You not only has to include
+`impress.js` script file, but also call `impress()` function.
+
+See the source of `index.html` for example and more details.
 
 
 ### 0.2 ([browse](http://github.com/bartaz/impress.js/tree/0.2), [zip](http://github.com/bartaz/impress.js/zipball/0.2), [tar](http://github.com/bartaz/impress.js/tarball/0.2))
@@ -86,6 +97,8 @@ EXAMPLES AND DEMOS
 
 [Careers in Free and Open Source Software](http://exequiel09.github.com/symposium-presentation/) by Exequiel Ceasar Navarrete [@ichigo1411](http://twitter.com/ichigo1411)
 
+[HTML5 Future : to infinity and beyond!](http://sylvainw.github.com/HTML5-Future/index_en.html) by Sylvain Weber [@sylvainw](http://twitter.com/sylvainw)
+
 ### Websites and portfolios
 
 [lioshi.com](http://lioshi.com) by @lioshi
@@ -96,6 +109,7 @@ EXAMPLES AND DEMOS
 
 [museum140](http://www.youtube.com/watch?v=ObLiikJEt94) Shorty Award promo video [entirely made with ImpressJS](http://thingsinjars.com/post/446/museum140-shorty/) by [@thingsinjars](http://twitter.com/thingsinjars)
 
+[electricanimal.co.uk](http://www.electricanimal.co.uk) by [@elecmal](http://twitter.com/elecmal)
 
 If you have used impress.js in your presentation (or website) and would like to have it listed here,
 please contact me via GitHub or send me a pull request to updated `README.md` file.
@@ -107,12 +121,14 @@ BROWSER SUPPORT
 
 ### TL;DR;
 
-Currently impress.js works fine in latest Chrome/Chromium browser, Safari 5.1 and Firefox 10
-(to be released in January 2012). IE is currently not supported (IE10 is close, but not there
-yet - see below for details). It also doesn't work in Opera.
+Currently impress.js works fine in latest Chrome/Chromium browser, Safari 5.1 and Firefox 10.
+With addition of some HTML5 polyfills (see below for details) it should work in Internet Explorer 10
+(currently available as Developers Preview).
+It doesn't work in Opera, as it doesn't support CSS 3D transforms.
 
-As it was not developed with mobile browsers in mind, it currently doesn't work on 
-any mobile devices, including tablets.
+As a presentation tool it was not developed with mobile browsers in mind, but some tablets are good
+enough to run it, so it should work quite well on iPad (iOS 5, or iOS 4 with HTML5 polyfills) and 
+Blackberry Playbook.
 
 ### Still interested? Read more...
 
@@ -155,18 +171,24 @@ with running impress.js.
 
 ### And few more details about mobile support
 
-Mobile browsers are currently not supported. Even iOS and Android browsers that support
-CSS 3D transforms are forced into fallback view at this point.
+Mobile browsers are currently not supported. Even Android browsers that support CSS 3D transforms are
+forced into fallback view at this point.
 
-Anyway, I'm really curious to see how modern mobile devices such as iPhone or iPad can
-handle such animations, so future mobile support is considered.
+Fortunately some tablets seem to have good enough hardware support and browsers to handle it.
+Currently impress.js presentations should work on iPad and Blackberry Playbook.
 
-iOS supports `classList` and `dataset` APIs starting with version 5, so iOS 4.X and older is not
-likely to be supported (without polyfill code).
+In theory iPhone should also be able to run it (as it runs the same software as iPad), but I haven't
+found a good way to handle it's small screen.
+
+Also note that iOS supports `classList` and `dataset` APIs starting with version 5, so iOS 4.X and older
+requires polyfills to work.
 
 
 LICENSE
 ---------
 
-Copyright 2011-2012 Bartek Szopka. Released under MIT License.
+Copyright 2011-2012 Bartek Szopka
+
+Released under the MIT and GPL Licenses.
+
 
