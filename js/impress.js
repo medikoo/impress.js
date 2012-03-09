@@ -384,6 +384,12 @@
         // by selecting step defined in url or first step of the presentation
         goto(getElementFromUrl() || steps[0]);
 
+        // If url includes hash, Webkit after whole dom is loaded
+        // scrolls to element. We reset that behavior.
+        setTimeout(function () {
+            window.scrollTo(0, 0);
+        }, 0);
+
         return (roots[ "impress-root-" + rootId ] = {
             goto: goto,
             next: next,
