@@ -17,7 +17,6 @@ body {
 }
 
 h1, h2 {
-  font-family: 'Expletus Sans', 'Helvetica Neue', Arial, sans-serif;
   font-weight: normal;
 }
 h1 {
@@ -42,6 +41,7 @@ div.smaller p, div.smaller li { font-size: 0.7em; margin: 0.5em 0;}
 div.smaller pre { font-size: 0.5em; }
 
 p.small { font-size: 0.7em; }
+p.filename { font-size: 0.7em; }
 div.smaller p.small { font-size: 0.6em; }
 pre { font-size: 0.6em; margin: 0.3em 0; }
 body pre code {
