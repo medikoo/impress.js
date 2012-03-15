@@ -36,7 +36,7 @@
     <p><img src="HTML5.table.png" style="width: 100%" /></p>
   </div>
 
-  <div id="wykorzystanie-html5" class="step">
+  <div id="html5-wykorzystanie" class="step">
     <h3>Wykorzystane technologie</h3>
     <ul>
       <li><a href="http://en.wikipedia.org/wiki/Web_Storage">Web Storage</a></li>
@@ -48,11 +48,12 @@
     </ul>
   </div>
 
-  <div class="step">
+  <div id="aplikacja" class="step">
     <h2 style="font-size: 1.5em"><a href="http://rbauv123.bas.roche.com:8000">rbauv123.bas.roche.com:8000</a></h2>
+    <p style="text-align:center">albert.ellis@example.com:11111</p>
   </div>
 
-  <div id="" class="step">
+  <div id="organizacja" class="step">
     <h3>Organizacja kodu</h3>
     <p>Moduły CommonJS (Node.js)</p>
     <p class="small">add.js</p>
@@ -72,8 +73,8 @@ var a = 1;
 inc(a); // 2</code></pre>
   </div>
 
-  <div id="how-io-should-be-done" class="step">
-    <p>Pakowane pod przeglądarkę z pomocą <a style="white-space:nowrap" href="https://github.com/medikoo/modules-webmake">modules-webmake</a></p>
+  <div id="webmake" class="step">
+    <p>Pakowanie pod przeglądarkę z pomocą <a style="white-space:nowrap" href="https://github.com/medikoo/modules-webmake">modules-webmake</a></p>
     <pre><code style="font-size: 0.75em">(function (modules) {
   // 53 linie kodu obsługującego zależności
 })
@@ -102,12 +103,12 @@ inc(a); // 2</code></pre>
 ("root/program");</code></pre>
   </div>
 
-  <div id="how-to-write-asynchronous-code" class="step">
+  <div id="moduly" class="step">
     <p>Więcej informacji na slajdach: <a href="http://www.medikoo.com/moduly-javascript.pdf">Moduły JavaScript</a></p>
     <p class="small">(wersja angielska: <a href="http://www.medikoo.com/javascript-modules.pdf">JavaScript Modules Done Right</a>)</p>
   </div>
 
-  <div class="step">
+  <div id="domjs" class="step">
     <h3>Silnik szablonów: <a href="https://github.com/medikoo/domjs">domjs</a></h3>
     <pre><code class="javascript" style="font-size: 0.75em;">header(
   h1('Heading'),
@@ -135,8 +136,28 @@ myul(li('four'), li('five'));
 div(myul);</code></pre>
   </div>
 
+  <div id="widoki" class="step">
+    <h3>Widoki i routing</h3>
+    <p>Konfiguracja różnic na bazie drzewa</p>
+    <pre><code>// |-> Home
+//   |-> Profile
+//   |-> Patients
+//     |-> Patient
+//       |-> Add visit
+//   |-> Visits
+//     |-> Visit
 
-  <div id="nodejs-convention" class="step">
+// Szablony opisują różnice wobec nadrzędnego szablonu
+var home     = view('home.tpl');
+var profile  = home.diff('profile.tpl');
+var patients = home.diff('patients.tpl');
+var patient  = patients.diff('patient.tpl');
+var addVisit = patient.diff('add-visit.tpl');
+var visits   = home.diff('visits.tpl');
+var visit    = visits.diff('visit.tpl');</code></pre>
+  </div>
+
+  <div id="db" class="step">
     <h3>Podręczna baza danych</h3>
     <pre><code style="font-size:0.75em;">var nsdoctor = db.create('doctor', {
   name: { type: 'text', label: 'Name', required: true },
@@ -165,9 +186,7 @@ john._updated // data modyfikacji
 Object.keys(john) // ['name', 'email']</code></pre>
   </div>
 
-
-
-  <div id="exercise" class="step">
+  <div id="db-kolekcje" class="step">
     <p>Kolekcje danego typu</p>
     <pre><code style="font-size:0.75em;">// to nieuporządkowane kolekcje obiektów,
 // widoczne właściwości:
@@ -192,7 +211,7 @@ carol._id // 'yuerert435'
 Object.keys(johnPatients); // ['gdsaa78sdf', '5rgrs23bfe', 'yuerert435']</code></pre>
   </div>
 
-  <div id="exercise-nodejs" class="step">
+  <div id="db-listy" class="step">
     <p>Uporządkowane listy</p>
     <pre><code style="font-size:0.75em;">var plist = nspatient.list('name');
 plist // [carol, henry, ian]
@@ -216,28 +235,7 @@ Object.keys(flist) // ['gdsaa78sdf', '5rgrs23bfe']
 flist.list('name') // [ian, henry]</code></pre>
   </div>
 
-  <div id="exercise-node-comment" class="step">
-    <h3>Widoki i routing</h3>
-    <p>Konfiguracja różnic na bazie drzewa</p>
-    <pre><code>// |-> Home
-//   |-> Profile
-//   |-> Patients
-//     |-> Patient
-//       |-> Add visit
-//   |-> Visits
-//     |-> Visit
-
-// Szablony opisują różnice wobec nadrzędnego szablonu
-var home     = view('home.tpl');
-var profile  = home.diff('profile.tpl');
-var patients = home.diff('patients.tpl');
-var patient  = patients.diff('patient.tpl');
-var addVisit = patient.diff('add-visit.tpl');
-var visits   = home.diff('visits.tpl');
-var visit    = visits.diff('visit.tpl');</code></pre>
-  </div>
-
-  <div id="most-popular-solutions" class="step">
+  <div id="pozostale" class="step">
     <h3>Poza tym:</h3>
     <ul>
       <li><a href="http://socket.io/">Socket.io</a> - Połączenia socketowe, klient &lt;-&gt; serwer</li>
@@ -248,19 +246,20 @@ var visit    = visits.diff('visit.tpl');</code></pre>
     </ul>
   </div>
 
-
-  <div id="questions" class="step">
+  <div id="pytania" class="step">
     <h2>Pytania?</h2>
   </div>
 
-  <div id="thank-you" class="step final">
+  <div id="dziekuje" class="step final">
     <h2>Dziękuję!</h2>
-
-    <p class="name">Mariusz Nowak</p>
-    <p class="email"><a href="mailto:mariusz.nowak@contractors.roche.com">mariusz.nowak@contractors.roche.com</a></p>
+    <div style="text-align: center; padding: 20px 0;">
+      <p class="name">Mariusz Nowak</p>
+      <p class="email" style="font-size: 0.75em"><a href="mailto:mariusz.nowak@contractors.roche.com">mariusz.nowak@contractors.roche.com</a></p>
+      <p style="padding: 30px 0"><img src="roche.white.png" style="width:30%; opacity: 0.7" /></p>
+    <div>
   </div>
 
-  <div id="overview" class="step" data-x="3400" data-y="2000" data-scale="10"></div>
+  <div id="overview" class="step" data-x="2800" data-y="1000" data-scale="10"></div>
   <div class="hint"><p>Use a spacebar or arrow keys to navigate</p></div>
 </div>
 
