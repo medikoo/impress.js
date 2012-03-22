@@ -285,12 +285,10 @@ promise(onsuccess, onerror);</code></pre>
     <p class="substep">Promises by nature can be chained</p>
     <div class="substep">
       <p><b><code>promise</code> function returns another promise</b> which is resolved with a value returned by a callback function:</p>
-      <pre><code>delayedAdd(2, 3)
-(function (result) {
+      <pre><code>delayedAdd(2, 3)(function (result) {
   // result === 5
   return result*result;
-})
-<span class="substep">(function (result) {
+})<span class="substep">(function (result) {
   console.log(result); // 25
 });</span></code></pre>
     </div>
@@ -298,11 +296,9 @@ promise(onsuccess, onerror);</code></pre>
 
   <div id="chaining-promises-cont" class="step">
     <p>If no callback for given flow (success or error) was given, then promise is resolved with input value:</p>
-    <pre><code>delayedAdd(2, 3)
-(null, function (err) {
+    <pre><code>delayedAdd(2, 3)(null, function (err) {
   // handle eventual error
-})
-(function (result) {
+})(function (result) {
   console.log(result); // 5
 });</code></pre>
     <div class="substep">
@@ -334,11 +330,9 @@ d.promise(function (result) {
 promise(function () {
   // success flow
   throw error; // caught by promise implementation
-})
-<span class="substep">(function () {
+})<span class="substep">(function () {
   // never called
-})</span>
-<span class="substep">(function () {
+})</span><span class="substep">(function () {
   // never called
 }, function (e) {
   console.log(e === error); // true
@@ -353,19 +347,16 @@ promise(function () {
       <p>To expose the error, end promise chain with <code>.end()</code>:</p>
       <pre><code style="font-size: 0.8em">promise(function () {
   throw new Error("Error"); // caught
-})
-(function () {
+})(function () {
   // never called
-})
-.end(); // Error is thrown</code></pre>
+}).end(); // Error is thrown</code></pre>
     </div>
     <p class="substep"><strong>It's very important to end promise chains with <code>end</code> otherwise eventual errors that were not handled will not be exposed</strong></p>
     <div class="substep">
       <p>Errors can also be handled via <code>end</code> call:</p>
       <pre><code style="font-size: 0.8em">promise(function () {
   // ...
-})
-.end(function(err) {
+}).end(function(err) {
   // handle error
 });</code></pre>
     </div>
@@ -378,8 +369,7 @@ promise(function () {
     <div class="substep">
       <p>Do that with <b><code>deferred.promisify</code></b>:</p>
       <pre><code>var readFile = deferred.promisify(fs.readFile);
-readFile(filename, 'utf-8')
-(function (content) {
+readFile(filename, 'utf-8')(function (content) {
   // process content
 }).end();</code></pre>
     </div>
@@ -402,10 +392,11 @@ writeFile(filename + '.copy',
     <p class="substep">Sometimes we're interested in results of more than one promise object</p>
     <div class="substep">
       <p>We can help us again with a deferred function:</p>
-      <pre><code>deferred(delayedAdd(2, 3), delayedAdd(3, 5), delayedAdd(1, 7))
-(function (result) {
-    console.log(result); // [5, 8, 8]
-});</code></pre>
+      <pre><code>deferred(delayedAdd(2, 3), delayedAdd(3, 5),delayedAdd(1, 7))(
+    function (result) {
+        console.log(result); // [5, 8, 8]
+    }
+);</code></pre>
     </div>
   </div>
 
@@ -413,20 +404,18 @@ writeFile(filename + '.copy',
     <h3>Processing collections</h3>
     <div class="substep">
       <p>There is promise aware Array's <code>map</code>:</p>
-      <pre><code>deferred.map(filenames, readFile)
-(function (result) {
+      <pre><code>deferred.map(filenames, readFile)(function (result) {
   // result is an array of files content
 });</code></pre>
     </div>
     <p class="substep">If any call of <code>readFile</code> ends with an error, then promise returned by <code>deferred.map</code> is immediately rejected with that error</p>
     <div class="substep">
       <p>There's also promise aware Array's <code>reduce</code>:</p>
-      <pre><code>deferred.reduce([delayedAdd(2, 3), delayedAdd(3, 5),
-  delayedAdd(1, 7)], function (a, b) {
+      <pre><code>deferred.reduce([delayedAdd(2, 3), delayedAdd(3, 5), delayedAdd(1, 7)],
+  function (a, b) {
     return delayedAdd(a, b);
-  })
-(function (result) {
-    console.log(result); // 21
+  })(function (result) {
+  console.log(result); // 21
 });</code></pre>
     </div>
   </div>
@@ -437,8 +426,7 @@ writeFile(filename + '.copy',
     <h4 class="substep"><code>map</code> & <code>reduce</code></h4>
     <div class="substep">
       <p>Promise aware Array's methods that would be executed on resolved value</p>
-      <pre><code>readdir(directory).map(readFile)
-(function (result) {
+      <pre><code>readdir(directory).map(readFile)(function (result) {
   // result is an array of directory files content
 });</code></pre>
     </div>
@@ -449,8 +437,7 @@ writeFile(filename + '.copy',
     <div class="substep">
       <p>Invokes function (with pregiven arguments) on resolved value.</p>
       <pre><code>promise = deferred({ foo: function (arg) { return arg*arg }});
-promise.invoke('foo', 3)
-(function (result) {
+promise.invoke('foo', 3)(function (result) {
   console.log(result); // 9
 });</code></pre>
     </div>
@@ -461,8 +448,7 @@ promise.invoke('foo', 3)
     callback(null, arg*arg);
   }, 100);
 } });
-promise.invoke('foo', 3)
-(function (result) {
+promise.invoke('foo', 3)(function (result) {
   console.log(result); // 9
 });</code></pre>
     </div>
@@ -547,7 +533,7 @@ readdir(dirname, function (err, filenames) {
     <p class="substep"><b>What's interesting we can find promises in Dart</b></p>
     <p class="substep">However its API is not as versatile and largly differs form what was introduced here</p>
     <ul>
-      <li class="substep">Instead of two possible resolution states there are three: Completed, cancelled & failed</li>
+      <li class="substep">Instead of two possible resolution states there are three: completed, cancelled & failed</li>
       <li class="substep">You need to use three different methods to attach observers</li>
       <li class="substep">If promise is resolved with another promise, you need to run <code>flatten</code> to get final real value</li>
       <li class="substep">Different approach to grouping promises (join and waitFor methods)</li>
@@ -561,7 +547,7 @@ readdir(dirname, function (err, filenames) {
     <p>There are no promises but is there anything else that can help us with asynchronous programming ?</p>
     <h3 class="substep">Coroutines</h3>
     <div class="substep">
-      <p>They would help with callback style as instead of:</p>
+      <p>They would help with callback style, as instead of:</p>
       <pre><code>readFile(filename, function (err, content) {
   // ..
 });</code></pre>
@@ -575,12 +561,12 @@ if (err) {
 }
 // process content</code></pre>
     </div>
-    <p class="substep"><b>This however won't work well with promises<br />(what about error flow ?)</b></p>
+    <p class="substep"><b>This however won't work well with promises<br />(what about error path?)</b></p>
   </div>
 
   <div id="proxies" class="step">
     <h3>Proxies</h3>
-    <p class="substep">Proxies are very powerful and interesting feature</p>
+    <p class="substep">Proxies are very powerful</p>
     <p class="substep"><b>With proxies we can proxy property names onto resolved promise values</b></p>
     <div class="substep">
       <p>So instead of:</p>
@@ -590,7 +576,7 @@ if (err) {
       <p>We would be able to write:</p>
       <pre><code>promise.foo(arg);</code></pre>
     </div>
-    <p class="substep"><b>With internal support from promise implementation this will work</b></p>
+    <p class="substep"><b>With internal support from promise implementation this would work</b></p>
   </div>
 
   <div id="example-proxies" class="step">
