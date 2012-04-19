@@ -3,37 +3,48 @@
 
     var options = {};
     options.steps = {
-        "patient-registry": {
+        "javascript": {
             x: -300, y: -600, scale: 5 },
-        "html5": {
-            x: 2500, y: -1500, scale: 2 },
-        "html5-wykorzystanie": {
-            x: 2500, y: -200, scale: 2 },
-        "aplikacja": {
-            x: 5000, y: 80, scale: 5  },
-        "organizacja": {
-            x: 4500, y: -1300, scale: 2 },
-        "webmake": {
-            x: 6500, y: -1400, scale: 2 },
-        "moduly": {
-            x: 6500, y: -400, scale: 2  },
-        "domjs": {
-            x: -1000, y: 1900, scale: 2  },
-        "db": {
-            x: 800, y: 1900, scale: 2  },
-        "db-kolekcje": {
-            x: 2700, y: 1000, scale: 1.7 },
-        "db-listy": {
-            x: 4300, y: 1000, scale: 1.7  },
-        "widoki": {
-            x: 2700, y: 2200, scale: 1.7  },
-        "pozostale": {
-            x: 4300, y: 2200, scale: 1.7  },
+        "misunderstood": {
+            x: 2200, y: -1800, scale: 2 },
+        "overall": {
+            x: 2200, y: -1200, scale: 2 },
+        "functional": {
+            x: 2200, y: -300, scale: 2  },
+        "closure": {
+            x: 4100, y: -1700, scale: 2 },
+        "closure-2": {
+            x: 4100, y: -700, scale: 2 },
+        "oop": {
+            x: 5700, y: -2000, scale: 1.5  },
+        "oop-sample": {
+            x: 5700, y: -1000, scale: 1.5  },
+        "oop-1": {
+            x: 7200, y: -1800, scale: 1.5  },
+        "oop-2": {
+            x: 7200, y: -800, scale: 1.5 },
+        "oop-3": {
+            x: 7200, y: 200, scale: 1.5 },
 
-        "pytania": {
+        "oop-private": {
+            x: -900, y: 1300, scale: 2  },
+        "oop-super": {
+            x: -900, y: 2300, scale: 2  },
+        "ecosystem": {
+            x: 1000, y: 1800, scale: 2  },
+        "ecma": {
+            x: 2700, y: 700, scale: 2  },
+        "dom": {
+            x: 4500, y: 500, scale: 2  },
+        "modules": {
+            x: 2900, y: 2200, scale: 2  },
+        "tests": {
+            x: 4500, y: 1500, scale: 2  },
+
+        "questions": {
             x: 8000, y: 2000, rotate: { y: 65, z: -90 }, scale: 5 },
 
-        "dziekuje": {
+        "thank-you": {
             x: 6400, y: 1700, scale: 5 }
     };
     if (location.pathname.match(/\/3d\/(?:index\.html)?$/)) {
@@ -61,7 +72,7 @@
             dom.appendChild(wrap);
             var counter = wrap.appendChild(document.createElement('div'));
             counter.className = "counter";
-            counter.innerHTML = (index + 1) + " / " + steps.length;
+            counter.innerHTML = (index + 1) + " / " + (steps.length - 1);
         }
     });
 

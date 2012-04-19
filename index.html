@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <meta charset="utf-8" />
-<title>Patient Registry, HTML5 application at Roche | presentation by Mariusz Nowak (mariusz.nowak@contractors.roche.com)</title>
-<meta name="description" content="Patient Registry">
+<title>JavaScript: Best Practices for not JavaScript programmers | Mariusz Nowak (mariusz.nowak@contractors.roche.com)</title>
+<meta name="description" content="JavaScript: Best Practices for not JavaScript programmers">
 <meta name="author" content="Mariusz Nowak" />
 
 <link rel="stylesheet" href="css/font.css" />
 <link rel="stylesheet" href="css/default.css" />
-<link rel="stylesheet" href="highlight/styles/sunburst.css">
+<link rel="stylesheet" href="css/slides.css" />
+<link rel="stylesheet" href="highlight/styles/sunburst.css" />
 
 <div id="impress" class="impress-not-supported">
   <div id="fm1" class="fallback-message hidden">
@@ -22,236 +23,210 @@
     <p style="text-align:center"><big>Otherwise, scroll down to see the slides</big></p>
   </div>
 
-  <div id="patient-registry" class="step">
-    <h1><b>Patient Registry</b></h1>
-    <h2><b>HTML5</b> @</h2>
+  <div id="javascript" class="step">
+    <h1><b>JavaScript</b></h1>
+    <h2><b>Best Practices</b></h2>
+    <h3>for not JavaScript programmers</h3>
     <h3 style="text-align: center; padding:30px 0;"><img src="roche.white.png" style="width:40%; opacity: 0.7" /></h3>
     <p class="footer">
-      <span>Marzec 2012</span> ·
-      <span>Warszawa</span>
+      <span>April 2012</span> ·
+      <span>Warsaw</span>
     </p>
   </div>
 
-  <div id="html5" class="step">
-    <p><img src="HTML5.table.png" style="width: 100%" /></p>
+  <div id="misunderstood" class="step">
+    <h2><b>JavaScript</b>: The World's Most Misunderstood Programming Language</h2>
+    <p><i>-- <a href="http://www.crockford.com/javascript/javascript.html">Douglas Crockford</a></i></p>
   </div>
 
-  <div id="html5-wykorzystanie" class="step">
-    <h3>Wykorzystane technologie</h3>
+  <div id="overall" class="step">
     <ul>
-      <li><a href="http://en.wikipedia.org/wiki/Web_Storage">Web Storage</a></li>
-      <li><a href="http://en.wikipedia.org/wiki/Cache_manifest_in_HTML5">Application Cache</a></li>
-      <li><a href="http://en.wikipedia.org/wiki/Single-page_application#Browser_history">History</a></li>
-      <li><a href="http://en.wikipedia.org/wiki/Web_Sockets">Web Sockets</a></li>
-      <li><a href="http://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html">XMLHttpRequest (Level 2)</a></li>
-      <li><a href="http://es5.github.com/">ECMAScript 5</a></li>
+      <li>C-like syntax</li>
+      <li>However has more in common with functional languages like Lisp or Scheme than with C or Java.</li>
+      <li>Arrays instead of lists and objects instead of property lists.</li>
+      <li>Functions are first class. It has closures</li>
     </ul>
   </div>
 
-  <div id="aplikacja" class="step">
-    <h2 style="font-size: 1.5em"><a href="http://rbauv123.bas.roche.com:8000">rbauv123.bas.roche.com:8000</a></h2>
-    <p style="text-align:center">albert.ellis@example.com:12345</p>
+  <div id="functional" class="step">
+    <p>Think more functional when writing JavaScript</p>
+    <p class="link"><a href="http://www.nicollet.net/2011/10/functional-programming/">http://www.nicollet.net/2011/10/functional-programming/</a></p>
+    <p class="link"><a href="http://seanhess.github.com/2012/02/20/functional_javascript.html">http://seanhess.github.com/2012/02/20/functional_javascript.html</a></p>
+    <p>Stop writing classes</p>
+    <p class="link"><a href="http://www.youtube.com/watch?v=o9pEzgHorH0">http://www.youtube.com/watch?v=o9pEzgHorH0</a></p>
+    <p style="text-align: center; font-size: 1em; margin-top: 2em;">Don't try to work with JavaScript as if it's language it is not</p>
   </div>
 
-  <div id="organizacja" class="step">
-    <h3>Organizacja kodu</h3>
-    <p>Moduły CommonJS (Node.js)</p>
-    <p class="small">add.js</p>
-    <pre><code><mark>module.exports</mark> = function() {
-  var sum = 0, i = 0, args = arguments, l = args.length;
-  while (i &lt; l) sum += args[i++];
-  return sum;
-};</code></pre>
-    <p class="small">increment.js</p>
-    <pre><code>var add = <mark>require</mark>('./add');
-<mark>module.exports</mark> = function(val) {
-  return add(val, 1);
-};</code></pre>
-    <p class="small">program.js</p>
-    <pre><code>var inc = <mark>require</mark>('./increment');
-var a = 1;
-inc(a); // 2</code></pre>
+  <div id="closure" class="step">
+    <h2>Closure - lexical scope</h2>
+    <p>No closures involved:</p>
+    <p><pre><code>function add(x, y) {
+	return x + y;
+}
+function add5(y) {q
+	return add(5, y);
+}
+function add10(y) {
+	return add(10, y);
+}
+console.log(add5(2)); // 7
+console.log(add10(3)); // 13</code></pre></p>
+  </div>
+  <div id="closure-2" class="step">
+    <p>With a closure:</p>
+    <p><pre><code>function makeAdder(x) {
+  return function(y) {
+    return x + y;
+  };
+}
+
+var add5 = makeAdder(5);
+var add10 = makeAdder(10);
+console.log(add5(2)); // 7
+console.log(add10(3)); // 13</code></pre></p>
+    <p>Closure means encapsulation</p>
+    <p class="link"><a href="https://developer.mozilla.org/en/JavaScript/Guide/Closures">MDN: Closures</a></p>
+    <p class="link"><a href="http://stackoverflow.com/questions/111102/how-do-javascript-closures-work">StackOverflow: How do JavaScript closures work?</a></p>
   </div>
 
-  <div id="webmake" class="step">
-    <p>Pakowanie pod przeglądarkę z pomocą <a style="white-space:nowrap" href="https://github.com/medikoo/modules-webmake">modules-webmake</a></p>
-    <pre><code style="font-size: 0.75em">(function (modules) {
-  // 53 linie kodu obsługującego zależności
-})
-({
-  "root": {
-    "add.js": function (exports, module, require) {
-      module.exports = function () {
-        var sum = 0, i = 0, args = arguments, l = args.length;
-        while (i &lt; l) sum += args[i++];
-        return sum;
-      };
-    },
-    "increment.js": function (exports, module, require) {
-      var add = require('./add');
-      module.exports = function (val) {
-        return add(val, 1);
-      };
-    },
-    "program.js": function (exports, module, require) {
-      var inc = require('./increment');
-      var a = 1;
-      inc(a); // 2
-    }
+  <div id="oop" class="step">
+    <h2>Prototypal inheritance</h2>
+    <p>JavaScript does not have classes</p>
+    <p>Instead of object-class we have object-object relationship</p>
+
+    <p class="link"><a href="http://manuel.kiessling.net/2012/03/23/object-orientation-and-inheritance-in-javascript-a-comprehensive-explanation/">http://manuel.kiessling.net/2012/03/23/object-orientation-and-inheritance-in-javascript-a-comprehensive-explanation/</a></p>
+  </div>
+  <div id="oop-sample" class="step">
+    <p><pre><code>var Animal = function (dateOfBirth) {
+  this.dateOfBirth = dateOfBirth;
+};
+Animal.prototype = {
+  dateOfBirth: null,
+  say: function (what) { console.log(what); },
+  getAge: function () {
+    return Math.floor((Date.now() - this.dateOfBirth) /
+      (1000 * 60 * 60 * 24 * 365.25));
   }
-})
-("root/program");</code></pre>
+};
+var Dog = function (dateOfBirth, breed) {
+  Animal.call(this, dateOfBirth);
+  if (breed)  this.breed = breed;
+};
+Dog.prototype = Object.create(Animal.prototype);
+Dog.prototype.say = function () {
+  Animal.prototype.say.call(this, 'woof woof');
+};
+Dog.prototype.breed = 'mongrel';
+var sparky = new Dog(new Date('2008-02-23'), 'Terrier');
+sparky.name = 'Sparky';
+console.log(sparky.getAge());          // 4
+console.log(sparky.breed);             // 'Terrier'
+console.log(sparky.name);              // 'Sparky'
+console.log(sparky instanceof Animal); // true
+console.log(sparky instanceof Dog);    // true</code></pre></p>
   </div>
-
-  <div id="moduly" class="step">
-    <p>Więcej informacji na slajdach: <a href="http://www.medikoo.com/moduly-javascript.pdf">Moduły JavaScript</a></p>
-    <p class="small">(wersja angielska: <a href="http://www.medikoo.com/javascript-modules.pdf">JavaScript Modules Done Right</a>)</p>
+  <div id="oop-1" class="step">
+    <p><img src="inheritance.png" /></p>
   </div>
-
-  <div id="domjs" class="step">
-    <h3>Silnik szablonów: <a href="https://github.com/medikoo/domjs">domjs</a></h3>
-    <pre><code class="javascript" style="font-size: 0.75em;">header(
-  h1('Heading'),
-  h2('Subheading'));
-
-  nav(
-    ul({ 'class': 'breadcrumbs' },
-      li(a({ href: '/' }, 'Home')),
-      li(a({ href: '/section/'}, 'Section')),
-      li(a('Subject'))));
-
-  article(
-    p('Lorem ipsum...'));
-
-  footer('Footer stuff');</code></pre>
-    <p class="small">zorientowany obiektowo</p>
-    <pre><code style="font-size: 0.75em;">var myul = ul(li('one'), li('two'), li('three'));
-
-// ... jakiś kod ...
-
-// Dodanie dodatkowych elementów do listy myul
-myul(li('four'), li('five'));
-
-// Przeniesienie listy do innego elementu
-div(myul);</code></pre>
+  <div id="oop-2" class="step">
+    <p><pre><code>delete sparky.breed;
+console.log(sparky.breed); // 'mongrel'</pre></code></p>
+    <p><img src="inheritance.2.png" /></p>
   </div>
-
-  <div id="widoki" class="step">
-    <h3>Widoki i routing</h3>
-    <p>Konfiguracja różnic na bazie drzewa</p>
-    <pre><code>// |-> Home
-//   |-> Profile
-//   |-> Patients
-//     |-> Patient
-//       |-> Add visit
-//   |-> Visits
-//     |-> Visit
-
-// Szablony opisują różnice wobec nadrzędnego szablonu
-var home     = view('home.tpl');
-var profile  = home.diff('profile.tpl');
-var patients = home.diff('patients.tpl');
-var patient  = patients.diff('patient.tpl');
-var addVisit = patient.diff('add-visit.tpl');
-var visits   = home.diff('visits.tpl');
-var visit    = visits.diff('visit.tpl');</code></pre>
+  <div id="oop-3" class="step">
+    <p><pre><code>delete Dog.prototype.breed;
+console.log(sparky.breed); // undefined</pre></code></p>
+    <p><img src="inheritance.3.png" /></p>
   </div>
-
-  <div id="db" class="step">
-    <h3>Podręczna baza danych</h3>
-    <pre><code style="font-size:0.75em;">var nsdoctor = db.create('doctor', {
-  name: { type: 'text', label: 'Name', required: true },
-  email: { type: 'email', label: 'E-mail', required: true }
-});
-
-var nspatient = db.create('patient', {
-  name: { type: 'text', label: 'Name', required: true },
-  doctor: { type: nsdoctor, label: 'Doctor', required: true }
-});
-
-var nsvisit = db.create('visit', {
-  doctor: { type: nsdoctor, label: 'Doctor', required: true },
-  patient: { type: nspatient, label: 'Patient', required: true },
-  date: { type: 'datetime', label: 'Date', required: true }
-});</code></pre>
-    <p>Obiekty</p>
-    <pre><code style="font-size:0.75em;">var john = nsdoctor.create({ name: 'John Smith', email: 'john.smith@roche.com' });
-
-// Meta dane:
-john._id // aka GUID np. 'fsay6u234sd'
-john._created // data utworzenia
-john._updated // data modyfikacji
-
-// Widoczne właściwości na obiekcie (z pomocą ECMAScript5)
-Object.keys(john) // ['name', 'email']</code></pre>
+  <div id="oop-private" class="step">
+    <p>There are no private or protected instance properties.</p>
+    <p>Convention is to start such with underscore:</p>
+    <p><pre><code>Animal.prototype._foo = function () {
+  // .. private foo
+}</code></pre></p>
   </div>
-
-  <div id="db-kolekcje" class="step">
-    <p>Kolekcje danego typu</p>
-    <pre><code style="font-size:0.75em;">// to nieuporządkowane kolekcje obiektów,
-// widoczne właściwości:
-assert.deep(nsdoctor, { fsay6u234sd: john }); // true
-Object.keys(nsdoctor) // ['fsay6u234sd']
-
-var ian = nspatient.create({ name: 'Ian Tate', doctor: john });
-var henry = nspatient.create({ name: 'Henry Wilkinson', doctor: john });
-
-ian._id // 'gdsaa78sdf'
-henry._id // '5rgrs23bfe'
-Object.keys(nspatient) // ['gdsaa78sdf', '5rgrs23bfe']</pre></code>
-    <p>Relacje</p>
-    <pre><code style="font-size:0.75em;">var johnPatients = john._get(nspatient);
-// to również nieuporządkowane kolekcje
-Object.keys(docPatients); // ['gdsaa78sdf', '5rgrs23bfe']
-
-var carol = nspatient.create({ name: 'Carol Hanson', doctor: john });
-carol._id // 'yuerert435'
-
-// Aktualizowane na bierząco
-Object.keys(johnPatients); // ['gdsaa78sdf', '5rgrs23bfe', 'yuerert435']</code></pre>
+  <div id="oop-super" class="step">
+    <p>It's verbose to call parent methods:</p>
+    <p><pre><code>Dog.prototype.say = function () {
+  Animal.prototype.say.call(this, 'woof woof');
+};</code></pre></p>
+    <p><em>It's gonna be fixed in future version of JavaScript with '<b>super</b>' keyword</em></p>
+    <p>In a meantime we can help ourselves with following util: <a href="https://gist.github.com/2394476">https://gist.github.com/2394476</a></p>
+    <p><pre><code>var Dog = extend(Animal, function (_super, dateOfBirth, breed) {
+  _super(this, dateOfBirth);
+  if (breed) this.breed = breed;
+}, {
+  breed: 'mongrel',
+  say: function (_super) {
+    _super(this, 'woof woof');
+  }
+});</code></pre></p>
   </div>
-
-  <div id="db-listy" class="step">
-    <p>Uporządkowane listy</p>
-    <pre><code style="font-size:0.75em;">var plist = nspatient.list('name');
-plist // [carol, henry, ian]
-
-// Ze wzgędów wydajnościowych aktualizowane w następnym "event loop'ie"
-henry._set('name', 'Zahary Wilkinson');
-setTimeout(function () {
-  plist // [carol, ian, henry]
-}, 0);</code></pre>
-    <p>Filtry</p>
-    <pre><code style="font-size:0.75em;">var flist = nspatient.filter('name', function (name, obj) {
-  return name.indexOf('Ian') === 0;
-});
-Object.keys(flist) // ['gdsaa78sdf']
-
-// aktualizowane na bierząco
-henry._set('name', 'Ian Wilkinson');
-Object.keys(flist) // ['gdsaa78sdf', '5rgrs23bfe']
-
-// Możemy tworzyć uporządkowane listy również na bazie filtrów
-flist.list('name') // [ian, henry]</code></pre>
-  </div>
-
-  <div id="pozostale" class="step">
-    <h3>Poza tym:</h3>
+  <div id="ecosystem" class="step">
+    <h3>JavaScript Ecosystem</h3>
     <ul>
-      <li><a href="http://socket.io/">Socket.io</a> - Połączenia socketowe, klient &lt;-&gt; serwer</li>
-      <li><a href="https://github.com/felixge/node-formidable">Formidable</a> - Obsługa uploadu załączników (serwer)</li>
-      <li><a href="https://github.com/medikoo/deferred">deferred</a> - Obsługa asynchronicznych wywołań<br /><span style="font-size: 0.75em; padding-left: 1.5em">Więcej informacji w slajdach <a href="http://medikoo.com/asynchronous-javascript/">Asynchronous JavaScript</a></span></li>
-      <li><a href="https://github.com/medikoo/es5-ext">es5-ext</a> - Rozszerzenia do standardu ES5</li>
-      <li><a href="http://www.mongodb.org/">mongodb</a> - Fizyczna baza danych po stronie serwra</li>
+     <li>EcmaScript (language itself)</li>
+     <li>DOM</li>
+     <li>HTML5
+       <ul>
+         <li>WebStorage</li>
+         <li>ApplicationCache</li>
+         <li>etc.</li>
+       </ul>
+    </ul>
+    <p>Get to know what's part of a language and what's part of external API</p>
+  </div>
+
+  <div id="ecma" class="step">
+    <h3>EcmaScript</h3>
+    <ul>
+      <li>Know it's API and use it extensively</li>
+      <li>Know the good and the bad parts: <a href="http://www.amazon.com/JavaScript-Good-Parts-Douglas-Crockford/dp/0596517742/ref=sr_1_1?ie=UTF8&qid=1334691103&sr=8-1">JavaScript: The Good Parts by Douglas Crockford</a></li>
+      <li>Some implementations are broken or incomplete, fix them: <a href="https://github.com/kriskowal/es5-shim">https://github.com/kriskowal/es5-shim</a></li>
+      <li><a href="http://documentcloud.github.com/underscore/">Underscore library</a> is a good place to look for complimentary functions</li>
     </ul>
   </div>
 
-  <div id="pytania" class="step">
-    <h2>Pytania?</h2>
+  <div id="dom" class="step">
+    <h3>DOM</h3>
+    <p>Very verbose and not that friendly API</p>
+    <p>If you have problem with it try <b><a href="http://jquery.com/">jQuery</a></b></p>
+    <p>jQuery is great choice when you need some sophisticated HTML widgets or effect</p>
+    <p><b>Do not use jQuery as an aid for language itself (EcmaScript) it's bad choice for that</b></p>
   </div>
 
-  <div id="dziekuje" class="step final">
-    <h2>Dziękuję!</h2>
+  <div id="modules" class="step">
+    <h3>Code organization</h3>
+    <p>Separate your code into modules</p>
+    <p>Use Module pattern:</p>
+    <p><pre><code>MYNAMESPACE.module = (function() {
+  var privateVar = '..';
+  var privateMethod = function (args) {
+    // ...
+  };
+  return {
+    publicProperty: '..',
+    publicMethod: function () {
+      // ...
+    }
+  };
+}());</pre></code></p>
+    <p>Similarly good way is to write CommonJS/Node.js style modules and pack them with <a href="https://github.com/medikoo/modules-webmake">modules-webmake</a></p>
+  </div>
+
+  <div id="tests" class="step">
+    <h3>Don't forget the tests</h3>
+    <p>There are tons of test engines for JavaScript.</p>
+    <p>Try <a href="http://busterjs.org/">Buster.js,</a> when configured it automatically runs tests in browsers and shows results in a console.</p>
+    <p>If your BDD fan you may like <a href="http://pivotal.github.com/jasmine/">Jasmine</a></p>
+  </div>
+
+  <div id="questions" class="step">
+    <h2>Questions?</h2>
+  </div>
+
+  <div id="thank-you" class="step final">
+    <h2>Thank You!</h2>
     <div style="text-align: center; padding: 20px 0;">
       <p class="name">Mariusz Nowak</p>
       <p class="email" style="font-size: 0.75em"><a href="mailto:mariusz.nowak@contractors.roche.com">mariusz.nowak@contractors.roche.com</a></p>

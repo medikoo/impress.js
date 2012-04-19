@@ -1,0 +1,16 @@
+#javascript h3 {
+  text-align: center;
+}
+#misunderstood h1, #misunderstood h2 {
+  font-size: 1.2em;
+}
+#misunderstood p {
+  padding: 1em 0;
+  text-align: right;
+}
+p.link { font-size:0.6em; margin: 0; }
+p.link a { padding: 0; }
+
+#oop h2 {
+ font-size: 1.5em;
+}
