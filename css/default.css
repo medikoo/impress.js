@@ -17,13 +17,12 @@ body {
 }
 
 h1, h2 {
-  font-family: 'Expletus Sans', 'Helvetica Neue', Arial, sans-serif;
   font-weight: normal;
 }
 h1 {
-  font-size: 2.5em;
+  font-size: 1.8em; font-weight: bold;
 }
-h2 { font-size: 2em; text-align: center; margin: 0.3em 0; }
+h2 { font-size: 1.5em; text-align: center; margin: 0.3em 0; }
 
 h3 { margin-bottom: 0.5em; color: #ddd; font-weight: normal; font-size: 42px; }
 h3 b { font-size: 1.1em; }
@@ -87,11 +86,12 @@ q { quotes: none; font-style: italic; }
 
 p.p-a { margin-left: -0.3em; }
 
-div.final p { font-size: 1.1em; margin: 0; }
-div.final p img { width: 2em; vertical-align: middle; }
-div.final p.p-a { margin-left: -0.6em; }
-div.final p.twitter { margin-top:1em; margin-bottom:0.5em; }
-div.final p.deferred { margin-top: 0.5em; font-size: 1.2em; text-align: center; }
+div.personal p { font-size: 1.1em; margin: 0; }
+div.personal p img { width: 2em; vertical-align: middle; }
+div.personal p.p-a { margin-left: -0.6em; }
+div.personal p.twitter { margin-top:1em; margin-bottom:0.5em; }
+div.personal p.work { margin-top: 1em; font-size: 1.2em; text-align: center; }
+div.personal p.work img.roche { width: 4em; opacity: 0.6; }
 
 a:link:hover {
   background: rgba(255,255,255, 0.2);
@@ -276,11 +276,66 @@ div#timer {
   opacity: 0.5;
 }
 
-#thank-you p.email {
+.personal p.email {
   margin-left: -0.3em;
 }
-#thank-you p.name {
+.personal p.name {
   font-size: 1.4em;
+}
+
+div.libs-list a {
+  display: block;
+  text-shadow: none;
+  opacity: 1;
+  padding: 0;
+  position: relative;
+  hei
+}
+div.libs-list .wrap {
+  height: 530px;
+}
+
+div.meteor { background: url(../meteor.png); width:350px; height: 200px;  }
+div.meteor a { width: 100%; height: 100%; }
+div.meteor span {
+  display: block; color: black; background: white; opacity: .9;
+  font-family: 'Helvetica Neue', Helvetica, Arial, san-serif; font-size: 39px;
+  font-weight: 900; letter-spacing: -2px; line-height: 50px; padding: 0 5px;
+}
+
+div.socket-stream { position: absolute; top: -30px; right: 100px; }
+div.socket-stream img { width: 6em; }
+
+div.derby { position: absolute; background: white; top: 250px; left: 100px; }
+div.derby a { color: #E84C52;
+padding: 20px 40px;
+font-weight: 600;
+font-size: 47px;
+font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+div.ember {
+  background: black;
+  position: absolute;
+  top: 240px;
+  right: 150px;
+}
+div.ember a {
+  padding: 20px 40px;
+}
+div.spine {
+  position: absolute;
+  top: 400px;
+  left: 370px;
+  background: white;
+}
+div.spine a {
+  font: 60px "agb","helvetica neue",helvetica,arial,sans-serif;
+  padding: 20px 40px;
+  color: #52585D;
+}
+@font-face {
+  font-family: "agb";
+  src: url("agb.ttf") format("truetype");
 }
 
 /* #impress:not(.step-overview) .substep:not(.active):not(.previous) { */
