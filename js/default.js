@@ -47,7 +47,7 @@
             dom.appendChild(wrap);
             var counter = wrap.appendChild(document.createElement('div'));
             counter.className = "counter";
-            counter.innerHTML = (index + 1) + " / " + steps.length;
+            counter.innerHTML = (index + 1) + " / " + (steps.length - 1);
         }
     });
 
