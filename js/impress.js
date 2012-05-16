@@ -386,7 +386,7 @@ impress.init = function ( document, window, impress, options ) {
             setSubSteps(active);
         }
         subSteps = active.subSteps;
-        if (false && subSteps.length && ((subactive = subSteps.active) || (subactive === 0))) {
+        if (subSteps.length && ((subactive = subSteps.active) || (subactive === 0))) {
             clearSub(subSteps[subactive]);
             if (subactive) {
                 setActive(subSteps[--subactive]);
@@ -416,7 +416,7 @@ impress.init = function ( document, window, impress, options ) {
             setSubSteps(active);
         }
         subSteps = active.subSteps;
-        if (false && subSteps.length && ((subactive = subSteps.active) !==
+        if (subSteps.length && ((subactive = subSteps.active) !==
             (subSteps.length - 1))) {
             if (subactive != null) {
                 setPrevious(subSteps[subactive]);
