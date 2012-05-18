@@ -42,7 +42,7 @@
   </div>
 
   <div id="js" class="step">
-    <img src="js.svg" style="display:block; margin: 0 auto; width:600px; height:750px" />
+    <img src="js.svg.png" style="display:block; margin: 0 auto; width:600px;" />
   </div>
 
   <div id="js-engines" class="step">
@@ -134,19 +134,17 @@ inc(a); // 2</code></pre>
   </div>
 
   <div id="data-manipulation" class="step">
-    <h3>Data manipulation</h3>
-    <p class="substep">Evented database engine in JavaScript</p>
+    <h3 style="margin-bottom:4.5px">Data manipulation</h3>
+    <p class="substep" style="margin:4.5px 0">Evented database engine in JavaScript</p>
     <div class="substep">
-      <pre><code style="font-size:0.75em;">var nsdoctor = db.create('doctor', {
+      <pre style="margin: 4.5px 0;"><code style="font-size:0.75em;">var nsdoctor = db.create('doctor', {
   name: { type: 'text', label: 'Name', required: true },
   email: { type: 'email', label: 'E-mail', required: true }
 });
-
 var nspatient = db.create('patient', {
   name: { type: 'text', label: 'Name', required: true },
   doctor: { type: nsdoctor, label: 'Doctor', required: true }
 });
-
 var nsvisit = db.create('visit', {
   doctor: { type: nsdoctor, label: 'Doctor', required: true },
   patient: { type: nspatient, label: 'Patient', required: true },
@@ -154,14 +152,12 @@ var nsvisit = db.create('visit', {
 });</code></pre>
     </div>
     <div class="substep">
-      <p>Objects</p>
-      <pre><code style="font-size:0.75em;">var john = nsdoctor.create({ name: 'John Smith', email: 'john.smith@roche.com' });
-
+      <p style="margin: 4.5px 0;">Objects</p>
+      <pre style="margin: 4.5px 0;"><code style="font-size:0.75em;">var john = nsdoctor.create({ name: 'John Smith', email: 'john.smith@roche.com' });
 // Meta:
 john._id // globally unique  np. 'fsay6u234sd'
 john._created // creation date
 john._updated // modification date
-
 // Visible object properties (possible only with ECMAScript5)
 Object.keys(john) // ['name', 'email']</code></pre>
     </div>
@@ -357,7 +353,7 @@ var visit    = visits.diff('visit.tpl');</code></pre>
 
   <div id="es3" class="step">
     <h3>What about EcmaScript 3 engines?</h3>
-    <p class="substep">With same code we can serve <b>static pages</b> to them using NodeJS server</p>
+    <p class="substep">With same code we can serve <b>static pages</b> using NodeJS server</p>
   </div>
 
   <div id="trend-growing" class="step">
