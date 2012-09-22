@@ -232,13 +232,13 @@ readdir(dirname, function (err, filenames) {
     <p class="substep"><q><code>delay</code> function decorator. Decorates function so its execution is delayed in time</q></p>
     <pre class="substep"><code style="font-size: 0.75em">var delay = function (fn, timeout) {
   return function () {
-  <span class="substep">  var <mark>d = deferred()</mark>, self = this, args = arguments;</span>
+  <span class="substep">  var <mark>def = deferred()</mark>, self = this, args = arguments;</span>
 
   <span class="substep">  setTimeout(function () {
-      <mark>d.resolve(fn.apply(self, args))</mark>;
+      <mark>def.resolve(fn.apply(self, args))</mark>;
     }, timeout);</span>
 
-<span class="substep">    <mark>return d.promise</mark>;</span>
+<span class="substep">    <mark>return def.promise</mark>;</span>
   };
 };
 
@@ -313,9 +313,9 @@ promise(onsuccess, onerror);</code></pre>
     <h3>Nesting promises</h3>
     <div class="substep">
       <p>If a promise is resolved with another promise, it's not really resolved. <b>Promise is resolved only when the final promise is resolved with a real value:</b></p>
-      <pre><code>var d = deferred();
-d.resolve(delayedAdd(2, 3));
-d.promise(function (result) {
+      <pre><code>var def = deferred();
+def.resolve(delayedAdd(2, 3));
+def.promise(function (result) {
   console.log(5); // 5;
 });</code></pre>
     </div>
@@ -353,10 +353,12 @@ promise(function () {
     </div>
     <p class="substep"><strong>It's very important to end promise chains with <code>end</code> otherwise eventual errors that were not handled will not be exposed</strong></p>
     <div class="substep">
-      <p>Errors can also be handled via <code>end</code> call:</p>
+      <p>Errors can also be handled via <code>end</code> call</p>
+      <p><code>end</code> has same signature as <code>then</code>, with difference that it ends promise</p>
+      <p>chain (no new promise is returned)</p>
       <pre><code style="font-size: 0.8em">promise(function () {
   // ...
-}).end(function(err) {
+}).end(null, function(err) {
   // handle error
 });</code></pre>
     </div>
