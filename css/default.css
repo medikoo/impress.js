@@ -96,7 +96,7 @@ div.personal p img { width: 2em; vertical-align: middle; }
 div.personal p.p-a { margin-left: -0.6em; }
 div.personal p.twitter { margin-top:1em; margin-bottom:0.5em; }
 div.personal p.work { margin-top: 1em; font-size: 1.2em; text-align: center; }
-div.personal p.work img.roche { width: 4em; opacity: 0.8; }
+div.personal p.work img.work-logo { width: 3.5em; margin-left: 0.8em; position: relative; top: -1em; }
 
 a:link:hover {
   background: rgba(0, 0, 0, 0.07);
