@@ -285,10 +285,10 @@ promise(onsuccess, onerror);</code></pre>
     <p class="substep">Promises by nature can be chained</p>
     <div class="substep">
       <p><b><code>promise</code> function returns another promise</b> which is resolved with a value returned by a callback function:</p>
-      <pre><code>delayedAdd(2, 3)(function (result) {
+      <pre><code>delayedAdd(2, 3).then(function (result) {
   // result === 5
   return result*result;
-})<span class="substep">(function (result) {
+})<span class="substep">.then(function (result) {
   console.log(result); // 25
 });</span></code></pre>
     </div>
@@ -296,14 +296,16 @@ promise(onsuccess, onerror);</code></pre>
 
   <div id="chaining-promises-cont" class="step">
     <p>If no callback for given flow (success or error) was given, then promise is resolved with input value:</p>
-    <pre><code>delayedAdd(2, 3)(null, function (err) {
+    <pre><code>delayedAdd(2, 3).then(null, function (err) {
   // handle eventual error
-})(function (result) {
+}).then(function (result) {
   console.log(result); // 5
 });</code></pre>
     <div class="substep">
-      <p>Instead of callbacks <b>you can also pass promise values to promise</b>:</p>
-      <pre><code>promise3 = promise1(promise2);
+      <p>In <a href="https://github.com/medikoo/deferred">deferred</a> implementation instead of callbacks <b>you can also pass promise values to promise</b>:</p>
+      <pre><code>promise3 = promise1.then(promise2);
+// or:
+promise3 = promise1(promise2);
 // promise3 is resolved with the value of promise2 ...
 // ... when both promise1 and promise2 are resolved</code></pre>
     </div>
@@ -315,7 +317,7 @@ promise(onsuccess, onerror);</code></pre>
       <p>If a promise is resolved with another promise, it's not really resolved. <b>Promise is resolved only when the final promise is resolved with a real value:</b></p>
       <pre><code>var def = deferred();
 def.resolve(delayedAdd(2, 3));
-def.promise(function (result) {
+def.promise.then(function (result) {
   console.log(5); // 5;
 });</code></pre>
     </div>
@@ -327,12 +329,12 @@ def.promise(function (result) {
     <div class="substep">
       <p><b>A promise resolved with an error (rejected) propagates its error to all promises that depend on this promise</b> (e.g. promises initiated by adding observers)</p>
       <pre><code style="font-size: 0.8em">var error = new Error("Error");
-promise(function () {
+promise.then(function () {
   // success flow
   throw error; // caught by promise implementation
-})<span class="substep">(function () {
+})<span class="substep">.then(function () {
   // never called
-})</span><span class="substep">(function () {
+})</span><span class="substep">.then(function () {
   // never called
 }, function (e) {
   console.log(e === error); // true
@@ -342,20 +344,19 @@ promise(function () {
   </div>
 
   <div id="end" class="step smaller">
-    <p>When there's no error callback passed, eventual error is silent</p>
+    <p>Problem with <code>then</code> is that any unhandled errors remain silent</p>
     <div class="substep">
-      <p>To expose the error, end promise chain with <code>.done()</code>:</p>
+      <p>To expose them, be sure to end promise chain with <code>.done()</code>:</p>
       <pre><code style="font-size: 0.8em">promise(function () {
   throw new Error("Error"); // caught
-})(function () {
+}).then(function () {
   // never called
 }).done(); // Error is thrown</code></pre>
     </div>
     <p class="substep"><strong>It's very important to end promise chains with <code>done</code> otherwise eventual errors that were not handled will not be exposed</strong></p>
     <div class="substep">
-      <p>Errors can also be handled via <code>done</code> call</p>
-      <p><code>done</code> has same signature as <code>then</code>, with difference that it ends promise</p>
-      <p>chain (no new promise is returned)</p>
+      <p><code>done</code> shares same signature as <code>then</code>, so you can handle errors in callbacks provided to <code>done</code>
+      <p><code>done</code> as it ends the chain, obviously doesn't return any promise</p>
       <pre><code style="font-size: 0.8em">promise(function () {
   // ...
 }).done(null, function(err) {
@@ -371,9 +372,9 @@ promise(function () {
     <div class="substep">
       <p>Do that with <b><code>deferred.promisify</code></b>:</p>
       <pre><code>var readFile = deferred.promisify(fs.readFile);
-readFile(filename, 'utf-8')(function (content) {
+readFile(filename, 'utf-8').done(function (content) {
   // process content
-}).done();</code></pre>
+});</code></pre>
     </div>
   </div>
   <div id="promisify-cont" class="step">
@@ -394,11 +395,10 @@ writeFile(filename + '.copy',
     <p class="substep">Sometimes we're interested in results of more than one promise object</p>
     <div class="substep">
       <p>We can help us again with a deferred function:</p>
-      <pre><code>deferred(delayedAdd(2, 3), delayedAdd(3, 5),delayedAdd(1, 7))(
-    function (result) {
+      <pre><code>deferred(delayedAdd(2, 3), delayedAdd(3, 5),delayedAdd(1, 7))
+    .done(function (result) {
         console.log(result); // [5, 8, 8]
-    }
-);</code></pre>
+    });</code></pre>
     </div>
   </div>
 
@@ -416,7 +416,7 @@ writeFile(filename + '.copy',
       <pre><code>deferred.reduce([delayedAdd(2, 3), delayedAdd(3, 5), delayedAdd(1, 7)],
   function (a, b) {
     return delayedAdd(a, b);
-  })(function (result) {
+  }).done(function (result) {
   console.log(result); // 21
 });</code></pre>
     </div>
@@ -428,7 +428,7 @@ writeFile(filename + '.copy',
     <h4 class="substep"><code>map</code> & <code>reduce</code></h4>
     <div class="substep">
       <p>Promise aware Array's methods that would be executed on resolved value</p>
-      <pre><code>readdir(directory).map(readFile)(function (result) {
+      <pre><code>readdir(directory).map(readFile).done(function (result) {
   // result is an array of directory files content
 });</code></pre>
     </div>
@@ -439,7 +439,7 @@ writeFile(filename + '.copy',
     <div class="substep">
       <p>Invokes function (with pregiven arguments) on resolved value.</p>
       <pre><code>promise = deferred({ foo: function (arg) { return arg*arg }});
-promise.invoke('foo', 3)(function (result) {
+promise.invoke('foo', 3).done(function (result) {
   console.log(result); // 9
 });</code></pre>
     </div>
@@ -450,7 +450,7 @@ promise.invoke('foo', 3)(function (result) {
     callback(null, arg*arg);
   }, 100);
 } });
-promise.invoke('foo', 3)(function (result) {
+promise.invoke('foo', 3).done(function (result) {
   console.log(result); // 9
 });</code></pre>
     </div>
@@ -463,7 +463,7 @@ promise.invoke('foo', 3)(function (result) {
       <pre><code>var promise = deferred([2, 3]);
 promise.match(function (a, b) {
   console.log(a + b); // 5
-});</code></pre>
+}).done();</code></pre>
     </div>
     <p class="substep">For more extensions see documentation at <a href="https://github.com/medikoo/deferred">github.com/medikoo/deferred</a></p>
     <p class="substep"><b>You can also freely extend <a href="https://github.com/medikoo/deferred">deferred</a> with your own extensions</b></p>
@@ -522,9 +522,7 @@ readdir(dirname, function (err, filenames) {
   })</span>
 <span class="substep" data-order="5">  // Concatenate into one string
   .invoke('join', '\n')</span>
-<span class="substep" data-order="6">)</span><span class="substep" data-order="7">.done(function (err) {
-  // handle eventual error
-});</span></code></pre>
+<span class="substep" data-order="6">)</span><span class="substep" data-order="7">.done(); // Expose eventual error</span></code></pre>
       </div>
     </div>
   </div>
@@ -620,9 +618,7 @@ if (err) {
   }</mark>)
   // Concatenate into one string
   .join('\n')
-)<mark>.done(function (err) {
-  // handle eventual error
-})</mark>;</code></pre>
+)<mark>.done(); // Expose eventual error</mark>;</code></pre>
       </div>
     </div>
   </div>
