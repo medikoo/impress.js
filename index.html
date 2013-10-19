@@ -344,21 +344,21 @@ promise(function () {
   <div id="end" class="step smaller">
     <p>When there's no error callback passed, eventual error is silent</p>
     <div class="substep">
-      <p>To expose the error, end promise chain with <code>.end()</code>:</p>
+      <p>To expose the error, end promise chain with <code>.done()</code>:</p>
       <pre><code style="font-size: 0.8em">promise(function () {
   throw new Error("Error"); // caught
 })(function () {
   // never called
-}).end(); // Error is thrown</code></pre>
+}).done(); // Error is thrown</code></pre>
     </div>
-    <p class="substep"><strong>It's very important to end promise chains with <code>end</code> otherwise eventual errors that were not handled will not be exposed</strong></p>
+    <p class="substep"><strong>It's very important to end promise chains with <code>done</code> otherwise eventual errors that were not handled will not be exposed</strong></p>
     <div class="substep">
-      <p>Errors can also be handled via <code>end</code> call</p>
-      <p><code>end</code> has same signature as <code>then</code>, with difference that it ends promise</p>
+      <p>Errors can also be handled via <code>done</code> call</p>
+      <p><code>done</code> has same signature as <code>then</code>, with difference that it ends promise</p>
       <p>chain (no new promise is returned)</p>
       <pre><code style="font-size: 0.8em">promise(function () {
   // ...
-}).end(null, function(err) {
+}).done(null, function(err) {
   // handle error
 });</code></pre>
     </div>
@@ -373,7 +373,7 @@ promise(function () {
       <pre><code>var readFile = deferred.promisify(fs.readFile);
 readFile(filename, 'utf-8')(function (content) {
   // process content
-}).end();</code></pre>
+}).done();</code></pre>
     </div>
   </div>
   <div id="promisify-cont" class="step">
@@ -384,7 +384,7 @@ readFile(filename, 'utf-8')(function (content) {
   , writeFile = deferred.promisify(fs.writeFile);
 
 writeFile(filename + '.copy',
-  readFile(filename, 'utf-8')).end();</code></pre>
+  readFile(filename, 'utf-8')).done();</code></pre>
     </div>
     <p class="small substep"><i>but keep in mind it's not best real world example, don't copy files that way, use <code>fs.createReadStream</code> instead</i></p>
   </div>
@@ -522,7 +522,7 @@ readdir(dirname, function (err, filenames) {
   })</span>
 <span class="substep" data-order="5">  // Concatenate into one string
   .invoke('join', '\n')</span>
-<span class="substep" data-order="6">)</span><span class="substep" data-order="7">.end(function (err) {
+<span class="substep" data-order="6">)</span><span class="substep" data-order="7">.done(function (err) {
   // handle eventual error
 });</span></code></pre>
       </div>
@@ -600,7 +600,7 @@ if (err) {
   })
   // Concatenate into one string
   .invoke('join', '\n')
-).end(function (err) {
+).done(function (err) {
   // handle eventual error
 });</code></pre>
       </div>
@@ -620,7 +620,7 @@ if (err) {
   }</mark>)
   // Concatenate into one string
   .join('\n')
-)<mark>.end(function (err) {
+)<mark>.done(function (err) {
   // handle eventual error
 })</mark>;</code></pre>
       </div>
